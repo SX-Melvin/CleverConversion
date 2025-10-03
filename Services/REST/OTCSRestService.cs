@@ -18,7 +18,7 @@ namespace CleverConversion.Services.REST
         {
             _username = options.Value.Username;
             _secret = options.Value.Secret;
-            _client = new RestClient(new RestClientOptions(options.Value.Url));
+            _client = new RestClient(new RestClientOptions(options.Value.ApiUrl));
             if(!Path.Exists(_downloadPath))
             {
                 Directory.CreateDirectory(_downloadPath);
