@@ -1,0 +1,37 @@
+﻿@page
+@model CleverConversion.Pages.ViewModel
+@{
+    ViewData["Title"] = "Loading...";
+}
+
+<div>
+    <center class="my-5">
+        <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZTlkdm03cXBheXRjejBubXRuOWJ2cDZmcGUxMnhkNDFpdnQzdmpqZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/sIIhZliB2McAo/giphy.gif" alt="Opening File..." />
+        <div class="mt-2 fw-bold">
+            Loading...
+        </div>
+    </center>
+</div>
+
+<script>
+    async function getFileInfo() {
+        try {
+        const response = await fetch("@Model.BasePath/api/view/v1/node/@Model.NodeId/name/@Model.FileName");
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const json = await response.json();
+
+        if(json.data.relativePath != null) {
+            window.location = `@Model.BasePath/viewer/?file=${json.data.relativePath}`
+        }
+
+        } catch (err) {
+            console.error("Fetch error:", err);
+        }
+    }
+
+    getFileInfo();
+</script>
