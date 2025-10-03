@@ -1,0 +1,19 @@
+{
+  "FileType": "pdf",
+  "PrintAllowed": true,
+  "Pages": [
+    {
+      "Width": 612,
+      "Height": 792,
+      "Number": 1,
+      "Name": null
+    },
+    {
+      "Width": 612,
+      "Height": 792,
+      "Number": 2,
+      "Name": null
+    }
+  ],
+  "TotalPagesCount": 2
+}
