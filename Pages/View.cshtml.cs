@@ -11,11 +11,10 @@ namespace CleverConversion.Pages
         public string? FileName { get; set; }
         [BindProperty(SupportsGet = true)]
         public string? NodeId { get; set; }
-        public string BasePath { get; set; }
+        public string BasePath { get; set; } = options.Value.BasePath;
 
         public void OnGet()
         {
-            BasePath = options.Value.BasePath;
         }
     }
 }
