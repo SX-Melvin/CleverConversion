@@ -61,13 +61,6 @@ function openViewer() {
             <span id="sidepanel_description" class="binf-sr-only"></span>
             <div class="csui-side-panel-resizer csui-resize-cursor-icon" aria-label="resizer" role="seperator" aria-valuemin="432px" aria-valuemax="100%" tabindex="0" style="touch-action: none;"></div>
             <div class="csui-side-panel-main">
-                <div class="ot-iv-Toolbar" role="toolbar" style="height: 3em; z-index: 1;">
-                    <div class="ot-iv-Toolbar-left" style="position: relative;">
-                        <button id="cc-close-btn" style="padding: 8px 16px;">
-                            Close
-                        </button>
-                    </div>
-                </div>
                 <iframe id="cc-iframe" src="${ccConfig.viewerUrl(that.model.attributes.id, that.model.attributes.name)}" width="100%" height="100%"></iframe>
             </div>
         </div>
@@ -79,6 +72,8 @@ function openViewer() {
             const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
             const logoText = iframeDoc.querySelector('.gd-header-logo-text');
             const logoBrand = iframeDoc.querySelector('.gd-header-logo-brand');
+            const toolbar = iframeDoc.querySelector("div.gd-header");
+            const closeBtn = iframeDoc.querySelector("#cc-close-btn");
 
             if (logoText && logoBrand) {
                 clearInterval(interval);
@@ -86,12 +81,18 @@ function openViewer() {
                 logoBrand.src = `${ccConfig.basePath}/img/6463527.png`;
                 console.log("Logos updated inside iframe!");
             }
+
+            if(toolbar && !closeBtn) {
+                console.log(toolbar);
+                toolbar.innerHTML = `<div _ngcontent-ng-c3276646777="" class="gd-header-col-start" style="margin-right:20px">
+                    <button title="Close" id="cc-close-btn" _ngcontent-ng-c1756903690="" gdbutton="" tooltipposition="bottom" _nghost-ng-c3062361797="" style="background:none" pc10=""><span _ngcontent-ng-c1756903690="" class="material-symbols-outlined ng-star-inserted">close</span></button>    
+                </div>` + toolbar.innerHTML;
+                iframeDoc.querySelector("#cc-close-btn").addEventListener("click", () => {
+                    document.querySelector("#cc-sidepanel").remove();
+                });
+            }
         }, 50);
     })
-
-    document.querySelector("#cc-close-btn").addEventListener("click", () => {
-        document.querySelector("#cc-sidepanel").remove();
-    });
 }
 // CleverConversion Integration - END
 ```
