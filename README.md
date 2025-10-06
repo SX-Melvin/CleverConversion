@@ -10,8 +10,9 @@
 // CleverConversion Integration - START
 var that = this;
 const ccConfig = {
+    basePath: "/cleverconversion",
     viewerUrl(id, title) {
-        return `/cleverconversion/view?nodeid=${id}&filename=${title}`;
+        return `${this.basePath}/view?nodeid=${id}&filename=${title}`;
     }
 };
 
@@ -67,11 +68,27 @@ function openViewer() {
                         </button>
                     </div>
                 </div>
-                <iframe src="${ccConfig.viewerUrl(that.model.attributes.id, that.model.attributes.name)}" width="100%" height="100%"></iframe>
+                <iframe id="cc-iframe" src="${ccConfig.viewerUrl(that.model.attributes.id, that.model.attributes.name)}" width="100%" height="100%"></iframe>
             </div>
         </div>
     `;
-    
+
+    const iframe = document.querySelector("#cc-iframe");
+    iframe.addEventListener("load", () => {
+        const interval = setInterval(() => {
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            const logoText = iframeDoc.querySelector('.gd-header-logo-text');
+            const logoBrand = iframeDoc.querySelector('.gd-header-logo-brand');
+
+            if (logoText && logoBrand) {
+                clearInterval(interval);
+                logoText.src = `${ccConfig.basePath}/img/opentext-logo.png`;
+                logoBrand.src = `${ccConfig.basePath}/img/6463527.png`;
+                console.log("Logos updated inside iframe!");
+            }
+        }, 50);
+    })
+
     document.querySelector("#cc-close-btn").addEventListener("click", () => {
         document.querySelector("#cc-sidepanel").remove();
     });
