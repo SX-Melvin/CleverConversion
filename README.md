@@ -50,23 +50,28 @@ function isOfficeFile(fileName) {
 }
 
 function openViewer() {
-    const el = document.querySelector(".binf-widgets");
+    if(document.querySelector("#cc-sidepanel") != null) {
+        document.querySelector("#cc-sidepanel").remove();
+    }
+
+    const el = document.querySelector(".binf-widgets .binf-widgets");
     el.innerHTML += `
-        <div id="cc-sidepanel" tabindex="-1" class="csui-sidepanel viewx-sidepanel-doc-preview csui-sidepanel--from-right csui-sidepanel-with-no-mask csui-sidepanel-with-resize csui-sidepanel-custom csui-sidepanel-visible"><div class="csui-sidepanel-container csui-panel-resizable" aria-modal="true" tabindex="0" role="dialog" aria-label="" aria-describedby="sidepanel_description">
+        <div id="cc-sidepanel" tabindex="-1" class="csui-sidepanel viewx-sidepanel-doc-preview csui-sidepanel--from-right csui-sidepanel-with-no-mask csui-sidepanel-with-resize csui-sidepanel-custom csui-sidepanel-visible" style="background-color:white"><div class="csui-sidepanel-container csui-panel-resizable" aria-modal="true" tabindex="0" role="dialog" aria-label="" aria-describedby="sidepanel_description" style="background-color: white">
             <span id="sidepanel_description" class="binf-sr-only"></span>
             <div class="csui-side-panel-resizer csui-resize-cursor-icon" aria-label="resizer" role="seperator" aria-valuemin="432px" aria-valuemax="100%" tabindex="0" style="touch-action: none;"></div>
             <div class="csui-side-panel-main">
-                <div class="ot-iv-Toolbar" role="toolbar" style="height: 3em; z-index: 1;background-color:white">
+                <div class="ot-iv-Toolbar" role="toolbar" style="height: 3em; z-index: 1;">
                     <div class="ot-iv-Toolbar-left" style="position: relative;">
                         <button id="cc-close-btn" style="padding: 8px 16px;">
                             Close
                         </button>
                     </div>
                 </div>
-                <iframe src="${ccConfig.viewerUrl(that.model.attributes.id, that.model.attributes.name)}" width="100%" height="500px"></iframe>
+                <iframe src="${ccConfig.viewerUrl(that.model.attributes.id, that.model.attributes.name)}" width="100%" height="100%"></iframe>
             </div>
         </div>
     `;
+    
     document.querySelector("#cc-close-btn").addEventListener("click", () => {
         document.querySelector("#cc-sidepanel").remove();
     });
