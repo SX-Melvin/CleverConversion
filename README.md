@@ -1,4 +1,4 @@
-# Important: Make 2 folders called 'Files' and 'Cache' in the root path first
+# Important: Make 2 folders called 'Files' and 'Cache' in the root path first (skip if exist)
 ## Configuration in appsettings.json
 - `App:BasePath` => The base path of the app, should be matter when deploying to IIS (Example "" or "/cleverconversion")
 - `OTCS:Username` => OT username (Example "admin")
