@@ -1,0 +1,3 @@
+﻿div.gd-toolbar__column ul > li:last-of-type {
+    display: none;
+}

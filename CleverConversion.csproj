@@ -10,6 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="GroupDocs.Annotation" Version="24.12.0" />
+    <PackageReference Include="GroupDocs.Conversion" Version="25.9.0" />
     <PackageReference Include="GroupDocs.Viewer.UI" Version="8.1.1" />
     <PackageReference Include="GroupDocs.Viewer.UI.Api.Local.Cache" Version="8.1.1" />
     <PackageReference Include="GroupDocs.Viewer.UI.Api.Local.Storage" Version="8.1.1" />

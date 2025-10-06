@@ -2,6 +2,8 @@ using CleverConversion.Configurations;
 using CleverConversion.Services;
 using CleverConversion.Services.REST;
 using NLog.Extensions.Logging;
+using GroupDocs.Annotation;
+using GroupDocs.Annotation.Options;
 
 var config = new ConfigurationBuilder()
    .SetBasePath(Directory.GetCurrentDirectory())
@@ -66,6 +68,7 @@ app.UseRouting().UseEndpoints(endpoints =>
 {
     endpoints.MapGroupDocsViewerUI(options =>
     {
+        options.AddCustomStylesheet("./wwwroot/css/custom.css");
         options.UIPath = "/viewer";
         options.ApiEndpoint = "/viewer-api";
     });
