@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- https://go.microsoft.com/fwlink/?LinkID=208121. -->
-<Project>
-  <PropertyGroup>
-    <_PublishTargetUrl>\\192.168.1.225\c$\zWork\CleverConversion</_PublishTargetUrl>
-    <History>True|2025-10-06T23:32:41.5035227Z||;False|2025-10-06T18:01:43.7709791+07:00||;True|2025-10-06T17:36:46.9430490+07:00||;False|2025-10-06T17:34:24.5004015+07:00||;False|2025-10-06T17:30:27.1424828+07:00||;True|2025-10-03T15:48:37.9794509+07:00||;True|2025-10-03T15:46:33.9282702+07:00||;True|2025-10-03T15:43:55.2572266+07:00||;</History>
-    <LastFailureDetails />
-  </PropertyGroup>
-</Project>
