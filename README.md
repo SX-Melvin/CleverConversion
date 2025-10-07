@@ -5,7 +5,7 @@
 - `OTCS:Secret` => OT password (Example "P@ssw0rd")
 - `OTCS:Url` => The OT API url (Example "http://192.168.1.225/otcs/cs.exe/api")
 
-## CSUI
+## CSUI (Edit variable `ccConfig`)
 ```
 // CleverConversion Integration - START
 var that = this;
@@ -83,13 +83,15 @@ function openViewer() {
             }
 
             if(toolbar && !closeBtn) {
-                console.log(toolbar);
                 toolbar.innerHTML = `<div _ngcontent-ng-c3276646777="" class="gd-header-col-start" style="margin-right:20px">
-                    <button title="Close" id="cc-close-btn" _ngcontent-ng-c1756903690="" gdbutton="" tooltipposition="bottom" _nghost-ng-c3062361797="" style="background:none" pc10=""><span _ngcontent-ng-c1756903690="" class="material-symbols-outlined ng-star-inserted">close</span></button>    
-                </div>` + toolbar.innerHTML;
+                    <button title="Close" id="cc-close-btn" _ngcontent-ng-c1756903690="" gdbutton="" tooltipposition="bottom" _nghost-ng-c3062361797="" style="background:none" pc10=""><span _ngcontent-ng-c1756903690="" class="material-symbols-outlined ng-star-inserted" style="font-size:18px">close</span></button>    
+                </div>`;
+                toolbar.style.height = "32px"
                 iframeDoc.querySelector("#cc-close-btn").addEventListener("click", () => {
                     document.querySelector("#cc-sidepanel").remove();
                 });
+                iframeDoc.querySelector(".wrapper.ng-star-inserted .ng-star-inserted").style.top = "30px";
+                iframeDoc.querySelector(".wrapper.ng-star-inserted").style.marginTop = "90px";
             }
         }, 50);
     })
