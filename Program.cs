@@ -2,8 +2,6 @@ using CleverConversion.Configurations;
 using CleverConversion.Services;
 using CleverConversion.Services.REST;
 using NLog.Extensions.Logging;
-using GroupDocs.Annotation;
-using GroupDocs.Annotation.Options;
 
 var config = new ConfigurationBuilder()
    .SetBasePath(Directory.GetCurrentDirectory())
