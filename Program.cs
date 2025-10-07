@@ -12,17 +12,6 @@ NLog.LogManager.Configuration = new NLogLoggingConfiguration(config.GetSection("
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", builder =>
-    {
-        builder
-            .WithOrigins("http://localhost:3000", "http://localhost")
-            .AllowAnyMethod()
-            .AllowAnyHeader();
-    });
-});
-
 builder.Services.Configure<OTCSConfiguration>(builder.Configuration.GetSection("OTCS"));
 builder.Services.Configure<AppConfiguration>(builder.Configuration.GetSection("App"));
 
@@ -30,7 +19,6 @@ builder.Services.Configure<AppConfiguration>(builder.Configuration.GetSection("A
 builder.Services.AddScoped<ViewService>();
 builder.Services.AddSingleton<OTCSRestService>();
 
-// Add services to the container.
 builder.Services.AddRazorPages();
 
 builder.Services
@@ -45,15 +33,11 @@ builder.Services
 var app = builder.Build();
 
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    //app.UseHsts();
 }
-    
-//app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();
@@ -62,18 +46,16 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
-app.UseRouting().UseEndpoints(endpoints =>
+app.MapGroupDocsViewerUI(options =>
 {
-    endpoints.MapGroupDocsViewerUI(options =>
-    {
-        options.AddCustomStylesheet("./wwwroot/css/custom.css");
-        options.UIPath = "/viewer";
-        options.ApiEndpoint = "/viewer-api";
-    });
-    endpoints.MapGroupDocsViewerApi(options =>
-    {
-        options.ApiPath = "/viewer-api";
-    });
+    options.AddCustomStylesheet("./wwwroot/css/custom.css");
+    options.UIPath = "/viewer";
+    options.ApiEndpoint = "/viewer-api";
+});
+
+app.MapGroupDocsViewerApi(options =>
+{
+    options.ApiPath = "/viewer-api";
 });
 
 await app.RunAsync();
