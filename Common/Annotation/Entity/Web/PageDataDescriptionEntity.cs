@@ -7,15 +7,6 @@ namespace CleverConversion.Common.Annotation.Entity.Web
     {
         /// List of annotation data  
         [JsonProperty]
-        private AnnotationDataEntity[] annotations;       
-
-        public void SetAnnotations(AnnotationDataEntity[] annotations) {
-            this.annotations = annotations;
-        }
-
-        public AnnotationDataEntity[] GetAnnotations()
-        {
-            return annotations;
-        }
+        public AnnotationDataEntity[] Annotations { get; set; } = [];
     }
 }

@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Net.Http.Headers;
 using GroupDocs.Annotation;
+using Newtonsoft.Json;
 
 namespace CleverConversion.Controllers
 {
@@ -45,7 +46,7 @@ namespace CleverConversion.Controllers
         public List<FileDescriptionEntity> loadFileTree(PostedDataEntity postedData)
         {
             // get request body
-            string relDirPath = postedData.path;
+            string relDirPath = postedData.Path;
             // get file list from storage path
             try
             {
@@ -75,14 +76,14 @@ namespace CleverConversion.Controllers
                         Path.GetFileName(file).StartsWith(".")))
                     {
                         FileDescriptionEntity fileDescription = new FileDescriptionEntity();
-                        fileDescription.guid = Path.GetFullPath(file);
-                        fileDescription.name = Path.GetFileName(file);
+                        fileDescription.Guid = Path.GetFullPath(file);
+                        fileDescription.Name = Path.GetFileName(file);
                         // set is directory true/false
-                        fileDescription.isDirectory = fileInfo.Attributes.HasFlag(FileAttributes.Directory);
+                        fileDescription.IsDirectory = fileInfo.Attributes.HasFlag(FileAttributes.Directory);
                         // set file size
-                        if (!fileDescription.isDirectory)
+                        if (!fileDescription.IsDirectory)
                         {
-                            fileDescription.size = fileInfo.Length;
+                            fileDescription.Size = fileInfo.Length;
                         }
                         // add object to array list
                         fileList.Add(fileDescription);
@@ -122,18 +123,18 @@ namespace CleverConversion.Controllers
 
         public AnnotatedDocumentEntity LoadDocument(AnnotationPostedDataEntity loadDocumentRequest, bool loadAllPages)
         {
-            string password = loadDocumentRequest.password;
+            string password = loadDocumentRequest.Password;
             AnnotatedDocumentEntity description = new();
-            string documentGuid = loadDocumentRequest.guid;
+            string documentGuid = loadDocumentRequest.Guid;
 
             using (Annotator annotator = new(documentGuid, GetLoadOptions(password)))
             {
                 IDocumentInfo info = annotator.Document.GetDocumentInfo();
                 AnnotationBase[] annotations = annotator.Get().ToArray();
-                description.guid = loadDocumentRequest.guid;
+                description.Guid = loadDocumentRequest.Guid;
                 string documentType = getDocumentType(info);
 
-                description.supportedAnnotations = new SupportedAnnotations().GetSupportedAnnotations(documentType);
+                description.SupportedAnnotations = new SupportedAnnotations().GetSupportedAnnotations(documentType);
 
                 List<string> pagesContent = new List<string>();
 
@@ -153,18 +154,18 @@ namespace CleverConversion.Controllers
 
                     if (annotations != null && annotations.Length > 0)
                     {
-                        page.SetAnnotations(AnnotationMapper.MapForPage(annotations, i + 1, info.PagesInfo[i], documentType));
+                        page.Annotations = AnnotationMapper.MapForPage(annotations, i + 1, info.PagesInfo[i], documentType);
                     }
 
                     if (pagesContent.Count > 0)
                     {
                         page.Data = pagesContent[i];
                     }
-                    description.pages.Add(page);
+                    description.Pages.Add(page);
                 }
             }
 
-            description.guid = documentGuid;
+            description.Guid = documentGuid;
             // return document description
             return description;
         }
@@ -182,9 +183,9 @@ namespace CleverConversion.Controllers
             try
             {
                 // get/set parameters
-                string documentGuid = loadDocumentPageRequest.guid;
-                int pageNumber = loadDocumentPageRequest.page;
-                password = loadDocumentPageRequest.password;
+                string documentGuid = loadDocumentPageRequest.Guid;
+                int pageNumber = loadDocumentPageRequest.Page;
+                password = loadDocumentPageRequest.Password;
                 PageDataDescriptionEntity loadedPage = new();
 
                 // get page image
@@ -203,7 +204,7 @@ namespace CleverConversion.Controllers
 
                     if (annotations != null && annotations.Length > 0)
                     {
-                        loadedPage.SetAnnotations(AnnotationMapper.MapForPage(annotations, pageNumber, info.PagesInfo[pageNumber - 1], documentType));
+                        loadedPage.Annotations = AnnotationMapper.MapForPage(annotations, pageNumber, info.PagesInfo[pageNumber - 1], documentType);
                     }
 
                     string encodedImage = Convert.ToBase64String(bytes);
@@ -330,7 +331,7 @@ namespace CleverConversion.Controllers
 
                 UploadedDocumentEntity uploadedDocument = new()
                 {
-                    guid = fileSavePath
+                    Guid = fileSavePath
                 };
 
                 return uploadedDocument;
@@ -379,23 +380,15 @@ namespace CleverConversion.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("downloadAnnotated")]
-        public HttpResponseMessage DownloadAnnotated(string path)
+        public IActionResult DownloadAnnotated(string path)
         {
-            // add file into the response
-            if (System.IO.File.Exists(path))
-            {
-                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-                var fileStream = new FileStream(path, FileMode.Open);
-                response.Content = new StreamContent(fileStream);
-                response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-                response.Content.Headers.ContentDisposition.FileName = Path.GetFileName(path);
-                return response;
-            }
-            else
-            {
-                return new HttpResponseMessage(HttpStatusCode.NotFound);
-            }
+            if (!System.IO.File.Exists(path))
+                return NotFound();
+
+            var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
+            var fileName = Path.GetFileName(path);
+            var contentType = "application/octet-stream";
+            return File(stream, contentType, fileName);
         }
 
         ///// <summary>
@@ -411,16 +404,16 @@ namespace CleverConversion.Controllers
             try
             {
                 // get/set parameters
-                string documentGuid = annotateDocumentRequest.guid;
-                string password = annotateDocumentRequest.password;
-                string documentType = SupportedImageFormats.Contains(Path.GetExtension(annotateDocumentRequest.guid).ToLowerInvariant()) ? "image" : annotateDocumentRequest.DocumentType;
+                string documentGuid = annotateDocumentRequest.Guid;
+                string password = annotateDocumentRequest.Password;
+                string documentType = SupportedImageFormats.Contains(Path.GetExtension(annotateDocumentRequest.Guid).ToLowerInvariant()) ? "image" : annotateDocumentRequest.DocumentType;
                 string tempPath = GetTempPath(documentGuid);
 
                 AnnotationDataEntity[] annotationsData = annotateDocumentRequest.AnnotationsData;
                 // initiate list of annotations to add
-                List<AnnotationBase> annotations = new List<AnnotationBase>();
+                List<AnnotationBase> annotations = [];
 
-                using (GroupDocs.Annotation.Annotator annotator = new GroupDocs.Annotation.Annotator(documentGuid, GetLoadOptions(password)))
+                using (Annotator annotator = new(documentGuid, GetLoadOptions(password)))
                 {
                     IDocumentInfo info = annotator.Document.GetDocumentInfo();
 
@@ -449,14 +442,20 @@ namespace CleverConversion.Controllers
                 // check if annotations array contains at least one annotation to add
                 if (annotations.Count != 0)
                 {
-                    using (GroupDocs.Annotation.Annotator annotator = new Annotator(documentGuid, GetLoadOptions(password)))
+                    using Annotator annotator = new(documentGuid, GetLoadOptions(password));
+                    try
                     {
                         foreach (var annotation in annotations)
                         {
+                            _logger.Info(JsonConvert.SerializeObject(annotation));
                             annotator.Add(annotation);
                         }
 
                         annotator.Save(tempPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Info(ex);
                     }
 
                     if (System.IO.File.Exists(documentGuid))
@@ -467,12 +466,12 @@ namespace CleverConversion.Controllers
                     System.IO.File.Move(tempPath, documentGuid);
                 }
 
-                annotatedDocument = new AnnotatedDocumentEntity();
-                annotatedDocument.guid = documentGuid;
+                annotatedDocument = new();
+                annotatedDocument.Guid = documentGuid;
                 if (annotateDocumentRequest.Print != null && annotateDocumentRequest.Print.Value)
                 {
-                    annotatedDocument.pages = GetAnnotatedPagesForPrint(password, documentGuid);
-                    System.IO.File.Move(documentGuid, annotateDocumentRequest.guid);
+                    annotatedDocument.Pages = GetAnnotatedPagesForPrint(password, documentGuid);
+                    System.IO.File.Move(documentGuid, annotateDocumentRequest.Guid);
                 }
             }
             catch (Exception ex)
@@ -486,7 +485,7 @@ namespace CleverConversion.Controllers
 
         private static List<PageDataDescriptionEntity> GetAnnotatedPagesForPrint(string password, string documentGuid)
         {
-            AnnotatedDocumentEntity description = new AnnotatedDocumentEntity();
+            AnnotatedDocumentEntity description = new();
             try
             {
                 using (FileStream outputStream = System.IO.File.OpenRead(documentGuid))
@@ -504,11 +503,11 @@ namespace CleverConversion.Controllers
                             page.Data = pagesContent[i];
                         }
 
-                        description.pages.Add(page);
+                        description.Pages.Add(page);
                     }
                 }
 
-                return description.pages;
+                return description.Pages;
             }
             catch (FileNotFoundException ex)
             {

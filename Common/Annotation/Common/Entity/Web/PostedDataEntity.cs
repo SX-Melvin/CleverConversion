@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace CleverConversion.Common.Annotation.Common.Entity.Web
 {
@@ -7,13 +8,28 @@ namespace CleverConversion.Common.Annotation.Common.Entity.Web
     /// </summary>
     public class PostedDataEntity
     {
-        public string? path { get; set; }
-        public string? guid { get; set; }
-        public string? password { get; set; }
-        public string? url { get; set; }
-        public int page { get; set; } = 1;
-        public int? angle { get; set; }
-        public List<int> pages { get; set; } = [];
-        public bool? rewrite { get; set; }
+        [JsonProperty]
+        public string? Path { get; set; }
+        
+        [JsonProperty]
+        public string? Guid { get; set; }
+
+        [JsonProperty]
+        public string? Password { get; set; }
+
+        [JsonProperty]
+        public string? Url { get; set; }
+        
+        [JsonProperty]
+        public int Page { get; set; } = 1;
+
+        [JsonProperty]
+        public int? Angle { get; set; }
+
+        [JsonProperty]
+        public List<int> Pages { get; set; } = [];
+
+        [JsonProperty]
+        public bool? Rewrite { get; set; }
     }
 }

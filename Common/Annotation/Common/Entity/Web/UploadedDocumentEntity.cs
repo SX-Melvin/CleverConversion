@@ -1,10 +1,13 @@
-﻿namespace CleverConversion.Common.Annotation.Common.Entity.Web
+﻿using Newtonsoft.Json;
+
+namespace CleverConversion.Common.Annotation.Common.Entity.Web
 {
     /// <summary>
     /// Uploaded document entity
     /// </summary>
     public class UploadedDocumentEntity
     {
-        public string guid { get; set; }
+        [JsonProperty]
+        public string Guid { get; set; }
     }
 }

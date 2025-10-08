@@ -26,7 +26,6 @@
 
   <ItemGroup>
     <Folder Include="Cache\" />
-    <Folder Include="Common\Annotation\Controllers\" />
     <Folder Include="Files\" />
   </ItemGroup>
 

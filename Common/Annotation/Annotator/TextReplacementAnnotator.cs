@@ -23,6 +23,10 @@ namespace CleverConversion.Common.Annotation.Annotator
         public override AnnotationBase AnnotateWord()
         {
             replacementAnnotation = InitAnnotationBase(replacementAnnotation) as ReplacementAnnotation;
+            //replacementAnnotation.FontSize = 12;
+            replacementAnnotation.FontColor = 1;
+            //replacementAnnotation.Opacity = 1;
+            //replacementAnnotation.BackgroundColor = 123456;
             return replacementAnnotation;
         }
 

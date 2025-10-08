@@ -139,26 +139,17 @@ namespace CleverConversion.Common.Annotation.Annotator
         /// <returns>AnnotationBase</returns>
         public AnnotationBase GetAnnotationBase(string documentType)
         {
-            switch (documentType)
+            return documentType switch
             {
-                case "Portable Document Format":
-                    return AnnotatePdf();
-                case "Microsoft Word":
-                case "Open Document Text":
-                    return AnnotateWord();
-                case "Rich Text Format":
-                    return AnnotateWord();
-                case "Microsoft PowerPoint":
-                    return AnnotateSlides();
-                case "image":
-                    return AnnotateImage();
-                case "Microsoft Excel":
-                    return AnnotateCells();
-                case "AutoCAD Drawing File Format":
-                    return AnnotateDiagram();
-                default:
-                    throw new GroupDocs.Annotation.Exceptions.AnnotatorException("Wrong annotation data without document type!");
-            }
+                "Portable Document Format" => AnnotatePdf(),
+                "Microsoft Word" or "Open Document Text" => AnnotateWord(),
+                "Rich Text Format" => AnnotateWord(),
+                "Microsoft PowerPoint" => AnnotateSlides(),
+                "image" => AnnotateImage(),
+                "Microsoft Excel" => AnnotateCells(),
+                "AutoCAD Drawing File Format" => AnnotateDiagram(),
+                _ => throw new GroupDocs.Annotation.Exceptions.AnnotatorException("Wrong annotation data without document type!"),
+            };
         }
 
         /// <summary>

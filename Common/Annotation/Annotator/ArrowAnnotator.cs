@@ -60,7 +60,7 @@ namespace CleverConversion.Common.Annotation.Annotator
             Reply annotationReplyInfo = base.GetAnnotationReplyInfo(comment);
             if (withGuid)
             {
-                annotationReplyInfo.ParentReply = new Reply { Id = annotationData.Id.Value };
+                annotationReplyInfo.ParentReply = new Reply { Id = annotationData.Id };
             }
             return annotationReplyInfo;
         }

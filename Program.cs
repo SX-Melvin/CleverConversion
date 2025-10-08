@@ -1,3 +1,4 @@
+using CleverConversion.Common.Annotation;
 using CleverConversion.Configurations;
 using CleverConversion.Services;
 using CleverConversion.Services.REST;
@@ -9,6 +10,8 @@ var config = new ConfigurationBuilder()
    .Build();
 
 NLog.LogManager.Configuration = new NLogLoggingConfiguration(config.GetSection("NLog"));
+
+GroupDocs.Total.License.SetLicense("./License/GroupDocs.Totalfor.NET.lic");
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,14 +1,25 @@
-﻿namespace CleverConversion.Common.Annotation.Common.Entity.Web
+﻿using Newtonsoft.Json;
+
+namespace CleverConversion.Common.Annotation.Common.Entity.Web
 {
     /// <summary>
     /// File description entity
     /// </summary>
     public class FileDescriptionEntity
     {
-        public string guid{ get; set; }
-        public string name{ get; set; }
-        public string docType{ get; set; }
-        public bool isDirectory{ get; set; }
-        public long size{ get; set; }
+        [JsonProperty]
+        public string Guid{ get; set; }
+
+        [JsonProperty]
+        public string Name{ get; set; }
+        
+        [JsonProperty]
+        public string DocType{ get; set; }
+        
+        [JsonProperty]
+        public bool IsDirectory{ get; set; }
+        
+        [JsonProperty]
+        public long Size{ get; set; }
     }
 }
