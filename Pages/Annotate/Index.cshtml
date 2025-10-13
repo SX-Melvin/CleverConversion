@@ -6,23 +6,20 @@
 
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-    <title>Annotation for .NET MVC</title>
-    <link rel="icon" type="image/x-icon" href="@Model.BasePath/annotation/favicon.ico" />
-</head>
-<body>
-    <client-root></client-root>
-    <script src="@Model.BasePath/annotation/runtime-es2015.js" type="module"></script>
-    <script src="@Model.BasePath/annotation/runtime-es5.js" nomodule></script>
-    <script src="@Model.BasePath/annotation/polyfills-es2015.js" type="module"></script>
-    <script src="@Model.BasePath/annotation/polyfills-es5.js" nomodule></script>
-    <script src="@Model.BasePath/annotation/styles-es2015.js" type="module"></script>
-    <script src="@Model.BasePath/annotation/styles-es5.js" nomodule></script>
-    <script src="@Model.BasePath/annotation/vendor-es2015.js" type="module"></script>
-    <script src="@Model.BasePath/annotation/vendor-es5.js" nomodule></script>
-    <script src="@Model.BasePath/annotation/main-es2015.js" type="module"></script>
-    <script src="@Model.BasePath/annotation/main-es5.js" nomodule></script>
-</body>
+    <head>
+        <meta charset="utf-8" />
+        <base href="/" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+        <title>Annotation for .NET MVC</title>
+        <link rel="icon" type="image/x-icon" href="@Model.BasePath/annotation/favicon.ico" />
+    </head>
+    <body>
+        <gd-total></gd-total>
+        <script src="@Model.BasePath/annotation/runtime-es2015.js" type="module"></script>
+        <script src="@Model.BasePath/annotation/polyfills-es2015.js" type="module"></script>
+        <script src="@Model.BasePath/annotation/runtime-es5.js" nomodule></script>
+        <script src="@Model.BasePath/annotation/polyfills-es5.js" nomodule></script>
+        <script src="@Model.BasePath/annotation/main-es2015.js" type="module"></script>
+        <script src="@Model.BasePath/annotation/main-es5.js" nomodule></script>
+    </body>
 </html>

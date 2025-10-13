@@ -15,7 +15,7 @@ namespace CleverConversion.Controllers
         private readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         [HttpGet("node/{nodeID}/name/{fileName}")]
-        public async Task<APIResponse<DownloadNodeResponse>> DownloadFile(long nodeID, string fileName)
+        public async Task<IActionResult> DownloadFile(long nodeID, string fileName)
         {
             APIResponse<DownloadNodeResponse> result = new();
             try
@@ -29,7 +29,12 @@ namespace CleverConversion.Controllers
                 result.Message = "ERROR";
             }
 
-            return result;
+            if (!string.IsNullOrEmpty(result.Data?.RedirectLink))
+            {
+                return Redirect(result.Data.RedirectLink);
+            }
+
+            return Ok(result);
         }
     }
 }

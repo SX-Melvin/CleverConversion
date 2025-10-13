@@ -18,7 +18,7 @@ namespace CleverConversion.Common.Annotation.Annotator
                     new Point(annotationData.Left, pageInfo.Height - annotationData.Top),
                     new Point(annotationData.Left + annotationData.Width, pageInfo.Height - annotationData.Top),
                     new Point(annotationData.Left, pageInfo.Height - annotationData.Top - annotationData.Height),
-                    new Point(annotationData.Left + annotationData.Width, pageInfo.Height - annotationData.Top - annotationData.Top)
+                    new Point(annotationData.Left + annotationData.Width, pageInfo.Height - annotationData.Top - annotationData.Height)
                 };
         }
 

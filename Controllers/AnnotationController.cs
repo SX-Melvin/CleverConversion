@@ -23,7 +23,7 @@ namespace CleverConversion.Controllers
     {
         private static GlobalConfiguration globalConfiguration = new();
         private readonly List<string> SupportedImageFormats = [".bmp", ".jpeg", ".jpg", ".tiff", ".tif", ".png", ".dwg", ".dcm", ".dxf"];
-        private readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// Load Annotation configuration
@@ -136,7 +136,7 @@ namespace CleverConversion.Controllers
 
                 description.SupportedAnnotations = new SupportedAnnotations().GetSupportedAnnotations(documentType);
 
-                List<string> pagesContent = new List<string>();
+                List<string> pagesContent = [];
 
                 if (loadAllPages)
                 {
@@ -145,7 +145,7 @@ namespace CleverConversion.Controllers
 
                 for (int i = 0; i < info.PagesInfo.Count; i++)
                 {
-                    PageDataDescriptionEntity page = new PageDataDescriptionEntity
+                    PageDataDescriptionEntity page = new()
                     {
                         Number = i + 1,
                         Height = info.PagesInfo[i].Height,
@@ -439,6 +439,8 @@ namespace CleverConversion.Controllers
 
                 // Add annotation to the document
                 RemoveAnnotations(documentGuid, password);
+                _logger.Info(annotations.Count);
+
                 // check if annotations array contains at least one annotation to add
                 if (annotations.Count != 0)
                 {
@@ -447,7 +449,6 @@ namespace CleverConversion.Controllers
                     {
                         foreach (var annotation in annotations)
                         {
-                            _logger.Info(JsonConvert.SerializeObject(annotation));
                             annotator.Add(annotation);
                         }
 
@@ -466,8 +467,10 @@ namespace CleverConversion.Controllers
                     System.IO.File.Move(tempPath, documentGuid);
                 }
 
-                annotatedDocument = new();
-                annotatedDocument.Guid = documentGuid;
+                annotatedDocument = new()
+                {
+                    Guid = documentGuid
+                };
                 if (annotateDocumentRequest.Print != null && annotateDocumentRequest.Print.Value)
                 {
                     annotatedDocument.Pages = GetAnnotatedPagesForPrint(password, documentGuid);
@@ -523,10 +526,8 @@ namespace CleverConversion.Controllers
             {
                 using (Stream inputStream = System.IO.File.Open(documentGuid, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite))
                 {
-                    using (GroupDocs.Annotation.Annotator annotator = new GroupDocs.Annotation.Annotator(inputStream, GetLoadOptions(password)))
-                    {
-                        annotator.Save(tempPath, new SaveOptions { AnnotationTypes = AnnotationType.None });
-                    }
+                    using Annotator annotator = new (inputStream, GetLoadOptions(password));
+                    annotator.Save(tempPath, new SaveOptions { AnnotationTypes = AnnotationType.None });
                 }
 
                 System.IO.File.Delete(documentGuid);
