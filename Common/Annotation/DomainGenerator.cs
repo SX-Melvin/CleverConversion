@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CleverConversion.Common.Common.Config;
+using System;
 using System.IO;
 using System.Reflection;
 
@@ -9,7 +10,7 @@ namespace CleverConversion.Common.Annotation
     /// </summary>
     public class DomainGenerator
     {
-        private readonly Common.Config.GlobalConfiguration globalConfiguration;
+        private readonly GlobalConfiguration globalConfiguration;
         private readonly Type CurrentType;
 
         /// <summary>

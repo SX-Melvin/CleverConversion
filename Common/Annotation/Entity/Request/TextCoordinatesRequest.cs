@@ -1,4 +1,4 @@
-﻿using CleverConversion.Common.Annotation.Common.Entity.Web;
+﻿using CleverConversion.Common.Common.Entity.Web;
 
 namespace CleverConversion.Common.Annotation.Entity.Request
 {

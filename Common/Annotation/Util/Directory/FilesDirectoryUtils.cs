@@ -1,5 +1,5 @@
-﻿using CleverConversion.Common.Annotation.Common.Util.Directory;
-using CleverConversion.Common.Annotation.Config;
+﻿using CleverConversion.Common.Annotation.Config;
+using CleverConversion.Common.Common.Util.Directory;
 
 namespace CleverConversion.Common.Annotation.Util.Directory
 {

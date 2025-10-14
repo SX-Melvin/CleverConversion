@@ -2,9 +2,9 @@
 using System;
 using System.IO;
 using System.Linq;
-using CleverConversion.Common.Annotation.Common.Config;
-using CleverConversion.Common.Annotation.Common.Util.Parser;
+using CleverConversion.Common.Common.Util.Parser;
 using System.Text.Json.Serialization;
+using CleverConversion.Common.Common.Config;
 
 namespace CleverConversion.Common.Annotation.Config
 {

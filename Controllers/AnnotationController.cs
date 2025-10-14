@@ -1,8 +1,5 @@
 ﻿using CleverConversion.Common.Annotation.Annotator;
-using CleverConversion.Common.Annotation.Common.Config;
-using CleverConversion.Common.Annotation.Common.Entity.Web;
-using CleverConversion.Common.Annotation.Common.Resources;
-using CleverConversion.Common.Annotation.Common.Util.Comparator;
+using CleverConversion.Common.Common.Util.Comparator;
 using CleverConversion.Common.Annotation.Config;
 using CleverConversion.Common.Annotation.Entity.Web;
 using CleverConversion.Common.Annotation.Util;
@@ -14,6 +11,9 @@ using System.Net;
 using System.Net.Http.Headers;
 using GroupDocs.Annotation;
 using Newtonsoft.Json;
+using CleverConversion.Common.Common.Config;
+using CleverConversion.Common.Common.Resources;
+using CleverConversion.Common.Common.Entity.Web;
 
 namespace CleverConversion.Controllers
 {
