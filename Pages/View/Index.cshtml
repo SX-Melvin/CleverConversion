@@ -24,7 +24,9 @@
 
         const json = await response.json();
 
-        if(json.data.relativePath != null) {
+        if(json.data.redirectLink != null) {
+            window.location = json.data.redirectLink;
+        } else if(json.data.relativePath != null) {
             window.location = `@Model.BasePath/viewer/?file=${json.data.relativePath}`
         }
 
