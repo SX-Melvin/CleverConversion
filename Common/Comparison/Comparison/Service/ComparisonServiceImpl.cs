@@ -10,33 +10,32 @@ using GroupDocs.Comparison.Result;
 using GroupDocs.Comparison.Interfaces;
 using GroupDocs.Comparison.Options;
 using GroupDocs.Comparison;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Newtonsoft.Json;
 
 namespace CleverConversion.Common.Comparison.Comparison.Service
 {
-    public class ComparisonServiceImpl : IComparisonService
+    public class ComparisonServiceImpl
     {
-        private readonly GlobalConfiguration globalConfiguration;
-
-        public ComparisonServiceImpl(GlobalConfiguration globalConfiguration)
-        {
-            this.globalConfiguration = globalConfiguration;
-        }
+        private readonly GlobalConfiguration globalConfiguration = new();
+        private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         public List<FileDescriptionEntity> LoadFiles(PostedDataEntity fileTreeRequest)
         {
             // get request body
             string relDirPath = fileTreeRequest.Path;
+
             // get file list from storage path
             try
             {
                 // get all the files from a directory
                 if (string.IsNullOrEmpty(relDirPath))
                 {
-                    relDirPath = globalConfiguration.Comparison.GetFilesDirectory();
+                    relDirPath = globalConfiguration.Comparison.FilesDirectory;
                 }
                 else
                 {
-                    relDirPath = Path.Combine(globalConfiguration.Comparison.GetFilesDirectory(), relDirPath);
+                    relDirPath = Path.Combine(globalConfiguration.Comparison.FilesDirectory, relDirPath);
                 }
 
                 List<string> allFiles = new List<string>(Directory.GetFiles(relDirPath));
@@ -52,8 +51,8 @@ namespace CleverConversion.Common.Comparison.Comparison.Service
                     // check if current file/folder is hidden
                     if (!(fileInfo.Attributes.HasFlag(FileAttributes.Hidden) ||
                         Path.GetFileName(file).StartsWith(".") ||
-                        Path.GetFileName(file).Equals(Path.GetFileName(globalConfiguration.Comparison.GetFilesDirectory())) ||
-                        Path.GetFileName(file).Equals(Path.GetFileName(globalConfiguration.Comparison.GetResultDirectory()))))
+                        Path.GetFileName(file).Equals(Path.GetFileName(globalConfiguration.Comparison.FilesDirectory)) ||
+                        Path.GetFileName(file).Equals(Path.GetFileName(globalConfiguration.Comparison.ResultDirectory))))
                     {
                         FileDescriptionEntity fileDescription = new FileDescriptionEntity
                         {
@@ -81,19 +80,25 @@ namespace CleverConversion.Common.Comparison.Comparison.Service
 
         public bool CheckFiles(CompareRequest files)
         {
-            string extension = Path.GetExtension(files.guids[0].GetGuid());
-            // check if files extensions are the same and support format file
+            string extension = Path.GetExtension(files.Guids[0].Guid);
+
+            _logger.Info(JsonConvert.SerializeObject(files.Guids[0]));
+            _logger.Info(extension);
+            _logger.Info(CheckSupportedFiles(extension));
+
             if (!CheckSupportedFiles(extension))
             {
                 return false;
             }
-            foreach (CompareFileDataRequest path in files.guids)
+
+            foreach (CompareFileDataRequest path in files.Guids)
             {
-                if (!extension.Equals(Path.GetExtension(path.GetGuid())))
+                if (!extension.Equals(Path.GetExtension(path.Guid)))
                 {
                     return false;
                 }
             }
+
             return true;
         }
 
@@ -117,16 +122,16 @@ namespace CleverConversion.Common.Comparison.Comparison.Service
 
         public CompareResultResponse SetChanges(SetChangesRequest setChangesRequest)
         {
-            string extension = Path.GetExtension(setChangesRequest.guids[0].GetGuid());
+            string extension = Path.GetExtension(setChangesRequest.guids[0].Guid);
             string guid = Guid.NewGuid().ToString();
-            string resultGuid = Path.Combine(globalConfiguration.Comparison.GetResultDirectory(), guid + extension);
+            string resultGuid = Path.Combine(globalConfiguration.Comparison.ResultDirectory, guid + extension);
             
-            string firstPath = setChangesRequest.guids[0].GetGuid();
-            string secondPath = setChangesRequest.guids[1].GetGuid();
+            string firstPath = setChangesRequest.guids[0].Guid;
+            string secondPath = setChangesRequest.guids[1].Guid;
 
-            Comparer compareResult = new Comparer(firstPath, GetLoadOptions(setChangesRequest.guids[0].GetPassword()));
+            Comparer compareResult = new Comparer(firstPath, GetLoadOptions(setChangesRequest.guids[0].Password));
 
-            compareResult.Add(secondPath, GetLoadOptions(setChangesRequest.guids[1].GetPassword()));
+            compareResult.Add(secondPath, GetLoadOptions(setChangesRequest.guids[1].Password));
             CompareOptions compareOptions = new CompareOptions { CalculateCoordinates = true };
             if (Path.GetExtension(resultGuid) == ".pdf")
             {
@@ -159,7 +164,7 @@ namespace CleverConversion.Common.Comparison.Comparison.Service
             compareResult.ApplyChanges(resultGuid, new SaveOptions(), new ApplyChangeOptions() { Changes = changes });
 
             CompareResultResponse compareResultResponse = GetCompareResultResponse(changes, resultGuid);
-            compareResultResponse.SetExtension(extension);
+            compareResultResponse.Extension = extension;
 
             return compareResultResponse;
         }
@@ -282,28 +287,28 @@ namespace CleverConversion.Common.Comparison.Comparison.Service
         {
             // to get correct coordinates we will compare document twice
             // this is a first comparing to get correct coordinates of the insertions and style changes
-            string extension = Path.GetExtension(compareRequest.guids[0].GetGuid());
+            string extension = Path.GetExtension(compareRequest.Guids[0].Guid);
             string guid = Guid.NewGuid().ToString();
             //save all results in file
-            string resultGuid = Path.Combine(globalConfiguration.Comparison.GetResultDirectory(), guid + extension);
+            string resultGuid = Path.Combine(globalConfiguration.Comparison.ResultDirectory, guid + extension);
 
             Comparer compareResult = CompareFiles(compareRequest, resultGuid);
             ChangeInfo[] changes = compareResult.GetChanges();
 
             CompareResultResponse compareResultResponse = GetCompareResultResponse(changes, resultGuid);
-            compareResultResponse.SetExtension(extension);
+            compareResultResponse.Extension = extension;
             return compareResultResponse;
         }
 
         private static Comparer CompareFiles(CompareRequest compareRequest, string resultGuid)
         {
-            string firstPath = compareRequest.guids[0].GetGuid();
-            string secondPath = compareRequest.guids[1].GetGuid();
+            string firstPath = compareRequest.Guids[0].Guid;
+            string secondPath = compareRequest.Guids[1].Guid;
 
             // create new comparer
-            Comparer comparer = new Comparer(firstPath, GetLoadOptions(compareRequest.guids[0].GetPassword()));
+            Comparer comparer = new Comparer(firstPath, GetLoadOptions(compareRequest.Guids[0].Password));
 
-            comparer.Add(secondPath, GetLoadOptions(compareRequest.guids[1].GetPassword()));
+            comparer.Add(secondPath, GetLoadOptions(compareRequest.Guids[1].Password));
             CompareOptions compareOptions = new CompareOptions { CalculateCoordinates = true };
 
             if (Path.GetExtension(resultGuid) == ".pdf")
@@ -322,12 +327,12 @@ namespace CleverConversion.Common.Comparison.Comparison.Service
         private static CompareResultResponse GetCompareResultResponse(ChangeInfo[] changes, string resultGuid)
         {
             CompareResultResponse compareResultResponse = new CompareResultResponse();
-            compareResultResponse.SetChanges(changes);
+            compareResultResponse.Changes = changes;
 
             List<PageDescriptionEntity> pages = LoadDocumentPages(resultGuid, "", true).Pages;
 
-            compareResultResponse.SetPages(pages);
-            compareResultResponse.SetGuid(resultGuid);
+            compareResultResponse.Pages = pages;
+            compareResultResponse.Guid = resultGuid;
             return compareResultResponse;
         }
 

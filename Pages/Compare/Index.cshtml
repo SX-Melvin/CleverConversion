@@ -1,0 +1,25 @@
+﻿@page
+@model CleverConversion.Pages.Compare.IndexModel
+@{
+    // var config = new Common.Annotation.Common.Config.GlobalConfiguration();
+}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <base href="/" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+        <title>Comparison Mode</title>
+        <link rel="icon" type="image/x-icon" href="@Model.BasePath/comparison/favicon.ico" />
+    </head>
+    <body>
+        <gd-total></gd-total>
+        <script src="@Model.BasePath/comparison/runtime-es2015.js" type="module"></script>
+        <script src="@Model.BasePath/comparison/polyfills-es2015.js" type="module"></script>
+        <script src="@Model.BasePath/comparison/runtime-es5.js" nomodule></script>
+        <script src="@Model.BasePath/comparison/polyfills-es5.js" nomodule></script>
+        <script src="@Model.BasePath/comparison/main-es2015.js" type="module"></script>
+        <script src="@Model.BasePath/comparison/main-es5.js" nomodule></script>
+    </body>
+</html>

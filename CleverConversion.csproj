@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+	<PackageReference Include="System.Text.Encodings.Web" Version="9.0.0" />
     <PackageReference Include="GroupDocs.Total" Version="25.8.0" />
     <PackageReference Include="GroupDocs.Viewer.UI" Version="8.1.1" />
     <PackageReference Include="GroupDocs.Viewer.UI.Api.Local.Cache" Version="8.1.1" />
@@ -26,14 +27,21 @@
 
   <ItemGroup>
     <Folder Include="Cache\" />
-    <Folder Include="Files\" />
+    <Folder Include="Compared\" />
+    <Folder Include="wwwroot\comparison\" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="Cache\.gitkeep">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Compared\.gitkeep">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Files\.gitkeep">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Files\Original\.gitkeep">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="License\GroupDocs.Totalfor.NET.lic">

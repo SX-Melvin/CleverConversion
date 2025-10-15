@@ -11,69 +11,24 @@ namespace CleverConversion.Common.Comparison.Comparison.Model.Response
         /// List of changies
         /// </summary>
         [JsonProperty]
-        private ChangeInfo[] changes;
+        public ChangeInfo[] Changes { get; set; }
 
         /// <summary>
         /// List of images of pages with marked changes
         /// </summary>
         [JsonProperty]
-        private List<PageDescriptionEntity> pages;
+        public List<PageDescriptionEntity> Pages { get; set; }
 
         /// <summary>
         /// Unique key of results
         /// </summary>
         [JsonProperty]
-        private string guid;
+        public string Guid { get; set; }
 
         /// <summary>
         /// Extension of compared files, for saving Comparison results
         /// </summary>
         [JsonProperty]
-        private string extension;
-
-        public void SetChanges(ChangeInfo[] changes)
-        {
-            this.changes = changes;
-        }
-
-        public ChangeInfo[] GetChanges()
-        {
-            return changes;
-        }
-
-        public void SetPages(List<PageDescriptionEntity> pages)
-        {
-            this.pages = pages;
-        }
-
-        public void AddPage(PageDescriptionEntity page)
-        {
-            this.pages.Add(page);
-        }
-
-        public List<PageDescriptionEntity> GetPages()
-        {
-            return pages;
-        }
-
-        public void SetGuid(string guid)
-        {
-            this.guid = guid;
-        }
-
-        public string GetGuid()
-        {
-            return guid;
-        }
-
-        public void SetExtension(string extension)
-        {
-            this.extension = extension;
-        }
-
-        public string GetExtension()
-        {
-            return extension;
-        }
+        public string Extension { get; set; }
     }
 }

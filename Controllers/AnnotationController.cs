@@ -1,29 +1,31 @@
 ﻿using CleverConversion.Common.Annotation.Annotator;
-using CleverConversion.Common.Common.Util.Comparator;
 using CleverConversion.Common.Annotation.Config;
 using CleverConversion.Common.Annotation.Entity.Web;
 using CleverConversion.Common.Annotation.Util;
+using CleverConversion.Common.Common.Config;
+using CleverConversion.Common.Common.Entity.Web;
+using CleverConversion.Common.Common.Resources;
+using CleverConversion.Common.Common.Util.Comparator;
+using GroupDocs.Annotation;
 using GroupDocs.Annotation.Models;
 using GroupDocs.Annotation.Models.AnnotationModels;
 using GroupDocs.Annotation.Options;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.IO;
 using System.Net;
 using System.Net.Http.Headers;
-using GroupDocs.Annotation;
-using Newtonsoft.Json;
-using CleverConversion.Common.Common.Config;
-using CleverConversion.Common.Common.Resources;
-using CleverConversion.Common.Common.Entity.Web;
 
 namespace CleverConversion.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class AnnotationController : Controller
+    public class AnnotationController(Microsoft.Extensions.Options.IOptions<CleverConversion.Configurations.AppConfiguration> appConfig) : Controller
     {
         private static GlobalConfiguration globalConfiguration = new();
         private readonly List<string> SupportedImageFormats = [".bmp", ".jpeg", ".jpg", ".tiff", ".tif", ".png", ".dwg", ".dcm", ".dxf"];
         private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+        private CleverConversion.Configurations.AppConfiguration _appConfig = appConfig.Value;
 
         /// <summary>
         /// Load Annotation configuration
@@ -293,6 +295,7 @@ namespace CleverConversion.Controllers
                 string documentStoragePath = globalConfiguration.Annotation.FilesDirectory;
                 bool.TryParse(form["rewrite"], out bool rewrite);
                 string fileSavePath = "";
+
                 if (string.IsNullOrEmpty(url))
                 {
                     var file = form.Files["file"];
@@ -304,10 +307,8 @@ namespace CleverConversion.Controllers
 
                         fileSavePath = Path.Combine(documentStoragePath, targetFileName);
 
-                        using (var stream = new FileStream(fileSavePath, FileMode.Create))
-                        {
-                            await file.CopyToAsync(stream);
-                        }
+                        using var stream = new FileStream(fileSavePath, FileMode.Create);
+                        await file.CopyToAsync(stream);
                     }
                 }
                 else
@@ -325,6 +326,7 @@ namespace CleverConversion.Controllers
                     {
                         fileSavePath = Resources.GetFreeFileName(documentStoragePath, fileName);
                     }
+
                     // Download the Web resource and save it into the current filesystem folder.
                     client.DownloadFile(url, fileSavePath);
                 }
@@ -352,24 +354,20 @@ namespace CleverConversion.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("downloadDocument")]
-        public HttpResponseMessage DownloadDocument(string path)
+        public IActionResult DownloadDocument(string path)
         {
-            // add file into the response
-            if (System.IO.File.Exists(path))
-            {
-                RemoveAnnotations(path, "");
-                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-                var fileStream = new FileStream(path, FileMode.Open);
-                response.Content = new StreamContent(fileStream);
-                response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-                response.Content.Headers.ContentDisposition.FileName = Path.GetFileName(path);
-                return response;
-            }
-            else
-            {
-                return new HttpResponseMessage(HttpStatusCode.NotFound);
-            }
+            if (!System.IO.File.Exists(path))
+                return NotFound("File not found");
+
+            // Call your cleanup or preprocessing function
+            RemoveAnnotations(path, "");
+
+            // Open the file stream
+            var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            var fileName = Path.GetFileName(path);
+
+            // Let ASP.NET Core handle headers & streaming
+            return File(fileStream, "application/octet-stream", fileName);
         }
 
         /// <summary>
@@ -439,7 +437,6 @@ namespace CleverConversion.Controllers
 
                 // Add annotation to the document
                 RemoveAnnotations(documentGuid, password);
-                _logger.Info(annotations.Count);
 
                 // check if annotations array contains at least one annotation to add
                 if (annotations.Count != 0)
@@ -518,7 +515,7 @@ namespace CleverConversion.Controllers
             }
         }
 
-        public static void RemoveAnnotations(string documentGuid, string password)
+        public void RemoveAnnotations(string documentGuid, string password)
         {
             string tempPath = GetTempPath(documentGuid);
 
@@ -531,10 +528,16 @@ namespace CleverConversion.Controllers
                 }
 
                 System.IO.File.Delete(documentGuid);
-                System.IO.File.Move(tempPath, documentGuid);
+                //System.IO.File.Move(tempPath, documentGuid);
+
+                var fileName = Path.GetFileName(documentGuid);
+                var path = Path.Combine(_appConfig.Files.OriginalFilesPath, fileName);
+                _logger.Info(path);
+                System.IO.File.Copy(path, documentGuid, overwrite: true);
             }
             catch (Exception ex)
             {
+                _logger.Error(ex);
                 throw ex;
             }
         }

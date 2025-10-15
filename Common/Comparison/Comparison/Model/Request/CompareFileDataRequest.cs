@@ -6,29 +6,9 @@ namespace CleverConversion.Common.Comparison.Comparison.Model.Request
     public class CompareFileDataRequest
     {
         [JsonProperty]
-        private string guid { get; set; }
+        public string Guid { get; set; }
 
         [JsonProperty]
-        private string password { get; set; }
-
-        public void SetGuid(string guid)
-        {
-            this.guid = guid;
-        }
-
-        public string GetGuid()
-        {
-            return guid;
-        }
-
-        public void SetPassword(string password)
-        {
-            this.password = password;
-        }
-
-        public string GetPassword()
-        {
-            return password;
-        }
+        public string? Password { get; set; } = null;
     }
 }

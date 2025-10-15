@@ -12,16 +12,25 @@ namespace CleverConversion.Services.REST
         private readonly string _secret;
         private readonly RestClient _client;
         private readonly string _downloadPath = Path.GetFullPath("./Files");
+        private readonly string _downloadPathOrig = Path.GetFullPath("./Original");
         private readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public OTCSRestService(IOptions<OTCSConfiguration> options)
+        public OTCSRestService(IOptions<OTCSConfiguration> options, IOptions<AppConfiguration> appConfig)
         {
+            _downloadPath = Path.GetFullPath(appConfig.Value.Files.DownloadPath);
+            _downloadPathOrig = Path.GetFullPath(appConfig.Value.Files.OriginalFilesPath);
             _username = options.Value.Username;
             _secret = options.Value.Secret;
             _client = new RestClient(new RestClientOptions(options.Value.ApiUrl));
-            if(!Path.Exists(_downloadPath))
+
+            if (!Path.Exists(_downloadPath))
             {
                 Directory.CreateDirectory(_downloadPath);
+            }
+            
+            if(!Path.Exists(_downloadPathOrig))
+            {
+                Directory.CreateDirectory(_downloadPathOrig);
             }
         }
 
@@ -99,6 +108,7 @@ namespace CleverConversion.Services.REST
                 }
 
                 await File.WriteAllBytesAsync(filePath, response.RawBytes);
+                await File.WriteAllBytesAsync(Path.Combine(_downloadPathOrig, fileName), response.RawBytes);
                 result.AbsolutePath = filePath;
                 result.RelativePath = relativePath;
             }

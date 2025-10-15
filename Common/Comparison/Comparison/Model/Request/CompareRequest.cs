@@ -9,6 +9,6 @@ namespace CleverConversion.Common.Comparison.Comparison.Model.Request
         /// <summary>
         /// Contains list of the documents paths
         /// </summary>
-        public List<CompareFileDataRequest> guids { get; set; }
+        public List<CompareFileDataRequest> Guids { get; set; }
     }
 }

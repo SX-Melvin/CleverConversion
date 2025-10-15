@@ -20,7 +20,7 @@ namespace CleverConversion.Controllers
     {
         private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
         private static readonly GlobalConfiguration globalConfiguration = new();
-        private readonly IComparisonService _comparisonService = new ComparisonServiceImpl(globalConfiguration);
+        private readonly ComparisonServiceImpl _comparisonService = new();
 
         /// <summary>
         /// Load Comparison configuration
@@ -51,20 +51,17 @@ namespace CleverConversion.Controllers
         /// <param name=""></param>
         [HttpGet]
         [Route("downloadDocument")]
-        public HttpResponseMessage DownloadDocument(string guid)
+        public IActionResult DownloadDocument(string guid)
         {
-            string filePath = guid;
-            if (!string.IsNullOrEmpty(filePath) && System.IO.File.Exists(filePath))
-            {
-                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-                var fileStream = new FileStream(filePath, FileMode.Open);
-                response.Content = new StreamContent(fileStream);
-                response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-                response.Content.Headers.ContentDisposition.FileName = System.IO.Path.GetFileName(filePath);
-                return response;
-            }
-            return new HttpResponseMessage(HttpStatusCode.NotFound);
+            if (string.IsNullOrEmpty(guid) || !System.IO.File.Exists(guid))
+                return NotFound("File not found");
+
+            var fileName = Path.GetFileName(guid);
+            var fileStream = new FileStream(guid, FileMode.Open, FileAccess.Read);
+            var contentType = "application/octet-stream";
+
+            // Return the actual file stream as download
+            return File(fileStream, contentType, fileName);
         }
 
         /// <summary>
@@ -76,14 +73,14 @@ namespace CleverConversion.Controllers
         [Route("uploadDocument")]
         public async Task<UploadedDocumentEntity> UploadDocument()
         {
-            UploadedDocumentEntity uploadedDocument = new UploadedDocumentEntity();
+            UploadedDocumentEntity uploadedDocument = new();
 
             try
             {
                 var form = await Request.ReadFormAsync();
                 string url = form["url"];
                 // get documents storage path
-                string documentStoragePath = globalConfiguration.Comparison.GetFilesDirectory();
+                string documentStoragePath = globalConfiguration.Comparison.FilesDirectory;
                 bool rewrite = bool.Parse(form["rewrite"]);
                 string fileSavePath = "";
                 if (string.IsNullOrEmpty(url))
@@ -149,16 +146,10 @@ namespace CleverConversion.Controllers
         {
             try
             {
-                // check formats
                 if (_comparisonService.CheckFiles(compareRequest))
                 {
-                    // compare
                     CompareResultResponse result = _comparisonService.Compare(compareRequest);
-                    JsonSerializerSettings settings = new JsonSerializerSettings();
-                    settings.ContractResolver = new LowercaseContractResolver();
-                    string json = JsonConvert.SerializeObject(result, Formatting.Indented, settings);
-                    var compareResult = JsonConvert.DeserializeObject(json);
-                    return compareResult;
+                    return result;
                 }
                 else
                 {
@@ -184,11 +175,7 @@ namespace CleverConversion.Controllers
             try
             {
                 CompareResultResponse result = _comparisonService.SetChanges(setChangesRequest);
-                JsonSerializerSettings settings = new JsonSerializerSettings();
-                settings.ContractResolver = new LowercaseContractResolver();
-                string json = JsonConvert.SerializeObject(result, Formatting.Indented, settings);
-                var compareResult = JsonConvert.DeserializeObject(json);
-                return compareResult;
+                return result;
             }
             catch (Exception ex)
             {
@@ -207,7 +194,7 @@ namespace CleverConversion.Controllers
         {
             try
             {
-                LoadDocumentEntity document = ComparisonServiceImpl.LoadDocumentPages(loadResultPageRequest.Guid, loadResultPageRequest.Password, globalConfiguration.Comparison.GetPreloadResultPageCount() == 0);
+                LoadDocumentEntity document = ComparisonServiceImpl.LoadDocumentPages(loadResultPageRequest.Guid, loadResultPageRequest.Password, globalConfiguration.Comparison.PreloadResultPageCount == 0);
                 return document;
             }
             catch (PasswordProtectedFileException ex)

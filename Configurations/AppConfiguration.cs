@@ -6,10 +6,16 @@ namespace CleverConversion.Configurations
     {
         public string BasePath { get; set; }
         public AnnotationConfiguration Annotation { get; set; }
+        public FilesConfiguration Files { get; set; }
     }
 
     public class AnnotationConfiguration
     {
         public List<string> AllowedExts { get; set; } = [];
+    }
+    public class FilesConfiguration
+    {
+        public string OriginalFilesPath { get; set; }
+        public string DownloadPath { get; set; }
     }
 }
