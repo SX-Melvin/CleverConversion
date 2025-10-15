@@ -96,5 +96,12 @@ function openViewer() {
         }, 50);
     })
 }
+
+window.addEventListener("message", function (event) {
+    if (event.data === "closeIframe") {
+        console.log("Got message from iframe: closeIframe");
+        document.querySelector("#cc-sidepanel").remove();
+    }
+});
 // CleverConversion Integration - END
 ```
