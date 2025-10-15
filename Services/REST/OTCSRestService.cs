@@ -3,6 +3,7 @@ using CleverConversion.Dto.OTCS;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RestSharp;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace CleverConversion.Services.REST
 {
@@ -111,6 +112,63 @@ namespace CleverConversion.Services.REST
                 await File.WriteAllBytesAsync(Path.Combine(_downloadPathOrig, fileName), response.RawBytes);
                 result.AbsolutePath = filePath;
                 result.RelativePath = relativePath;
+            }
+            catch (Exception ex) 
+            { 
+                _logger.Error(ex);
+                result.Error = ex.Message;
+            }
+
+            return result;
+        }
+        public async Task<AddNodeVersionResponse> AddNodeVersion(long nodeID, string filePath, string? ticket = null)
+        {
+            AddNodeVersionResponse result = new();
+
+            try
+            {
+                if(ticket == null)
+                {
+                    var getTicket = await GetTicket();
+                    if (getTicket.Error != null) 
+                    {
+                        result.Error = getTicket.Error;
+                        return result;
+                    }
+                    else if(getTicket.Ticket == null)
+                    {
+                        result.Error = "Ticket is empty";
+                        return result;
+                    }
+
+                    ticket = getTicket.Ticket;
+                }
+
+                var request = new RestRequest($"v2/nodes/{nodeID}/versions", Method.Post);
+                request.AddParameter("body", JsonConvert.SerializeObject(new
+                {
+                    external_modify_date = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
+                }));
+
+                var provider = new FileExtensionContentTypeProvider();
+                if (!provider.TryGetContentType(filePath, out string contentType))
+                {
+                    contentType = "application/octet-stream";
+                }
+
+                request.AddFile("file", filePath, contentType);
+                request.AddHeader("otcsticket", ticket);
+
+                var response = await _client.ExecuteAsync(request);
+
+                _logger.Info($"v2/nodes/{nodeID}/versions: " + response.Content);
+
+                var data = JsonConvert.DeserializeObject<AddNodeVersionResponse>(response.Content);
+
+                if (data != null)
+                {
+                    result = data;
+                }
             }
             catch (Exception ex) 
             { 

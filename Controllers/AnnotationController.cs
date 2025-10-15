@@ -6,6 +6,8 @@ using CleverConversion.Common.Common.Config;
 using CleverConversion.Common.Common.Entity.Web;
 using CleverConversion.Common.Common.Resources;
 using CleverConversion.Common.Common.Util.Comparator;
+using CleverConversion.Dto.API;
+using CleverConversion.Services;
 using GroupDocs.Annotation;
 using GroupDocs.Annotation.Models;
 using GroupDocs.Annotation.Models.AnnotationModels;
@@ -20,12 +22,32 @@ namespace CleverConversion.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class AnnotationController(Microsoft.Extensions.Options.IOptions<CleverConversion.Configurations.AppConfiguration> appConfig) : Controller
+    public class AnnotationController(Microsoft.Extensions.Options.IOptions<CleverConversion.Configurations.AppConfiguration> appConfig, OTCSService otcsService) : Controller
     {
         private static GlobalConfiguration globalConfiguration = new();
         private readonly List<string> SupportedImageFormats = [".bmp", ".jpeg", ".jpg", ".tiff", ".tif", ".png", ".dwg", ".dcm", ".dxf"];
         private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
         private CleverConversion.Configurations.AppConfiguration _appConfig = appConfig.Value;
+        private readonly OTCSService _otcsService = otcsService;
+
+        [HttpPost]
+        [Route("syncToCS")]
+        public async Task<AddNodeVersionResponse> AddNodeVersion([FromBody] AddNodeVersionRequest body)
+        {
+            AddNodeVersionResponse result = new();
+
+            try
+            {
+                var data = await _otcsService.AddNodeVersion(body.NodeId, body.FilePath);
+                result = data.Data;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+
+            return result;
+        }
 
         /// <summary>
         /// Load Annotation configuration

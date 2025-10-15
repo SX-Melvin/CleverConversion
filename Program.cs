@@ -21,6 +21,7 @@ builder.Services.Configure<AppConfiguration>(builder.Configuration.GetSection("A
 
 // Add services to the container.
 builder.Services.AddScoped<ViewService>();
+builder.Services.AddScoped<OTCSService>();
 builder.Services.AddSingleton<OTCSRestService>();
 
 builder.Services.AddRazorPages();
