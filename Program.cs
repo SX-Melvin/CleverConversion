@@ -1,5 +1,8 @@
 using CleverConversion.Common.Annotation;
+using CleverConversion.Common.Common.Config;
 using CleverConversion.Common.Comparison.Comparison.Service;
+using CleverConversion.Common.Viewer;
+using CleverConversion.Common.Viewer.Caching;
 using CleverConversion.Configurations;
 using CleverConversion.Services;
 using CleverConversion.Services.REST;
@@ -21,6 +24,9 @@ builder.Services.Configure<AppConfiguration>(builder.Configuration.GetSection("A
 
 // Add services to the container.
 builder.Services.AddScoped<ViewService>();
+builder.Services.AddScoped<IViewer, CachingViewer>();
+builder.Services.AddScoped<IFileStorage, LocalFileStorage>();
+builder.Services.AddScoped<UIConfig>();
 builder.Services.AddScoped<OTCSService>();
 builder.Services.AddSingleton<OTCSRestService>();
 
@@ -66,9 +72,9 @@ app.MapRazorPages();
 
 app.MapGroupDocsViewerUI(options =>
 {
-    options.AddCustomStylesheet("./wwwroot/css/custom.css");
-    options.UIPath = "/viewer";
-    options.ApiEndpoint = "/viewer-api";
+    //options.AddCustomStylesheet("./wwwroot/css/custom.css");
+    //options.UIPath = "/viewer";
+    //options.ApiEndpoint = "/viewer-api";
 });
 
 app.MapGroupDocsViewerApi(options =>
