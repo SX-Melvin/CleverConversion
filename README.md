@@ -57,43 +57,48 @@ function openViewer() {
 
     const el = document.querySelector(".binf-widgets .binf-widgets");
     el.innerHTML += `
-        <div id="cc-sidepanel" tabindex="-1" class="csui-sidepanel viewx-sidepanel-doc-preview csui-sidepanel--from-right csui-sidepanel-with-no-mask csui-sidepanel-with-resize csui-sidepanel-custom csui-sidepanel-visible" style="background-color:white"><div class="csui-sidepanel-container csui-panel-resizable" aria-modal="true" tabindex="0" role="dialog" aria-label="" aria-describedby="sidepanel_description" style="background-color: white">
-            <span id="sidepanel_description" class="binf-sr-only"></span>
-            <div class="csui-side-panel-resizer csui-resize-cursor-icon" aria-label="resizer" role="seperator" aria-valuemin="432px" aria-valuemax="100%" tabindex="0" style="touch-action: none;"></div>
-            <div class="csui-side-panel-main">
-                <iframe id="cc-iframe" src="${ccConfig.viewerUrl(that.model.attributes.id, that.model.attributes.name)}" width="100%" height="100%"></iframe>
+        <div id="cc-sidepanel" tabindex="-1" class="csui-sidepanel viewx-sidepanel-doc-preview csui-sidepanel--from-right csui-sidepanel-with-no-mask csui-sidepanel-with-resize csui-sidepanel-custom csui-sidepanel-visible" style="background-color:white">
+            <div id="cc-sidepanel-container" class="csui-sidepanel-container csui-panel-resizable" aria-modal="true" tabindex="0" role="dialog" aria-label="" aria-describedby="sidepanel_description" style="visibility:hidden;width: 100vw;background-color: white">
+                <span id="sidepanel_description" class="binf-sr-only"></span>
+                <div class="csui-side-panel-resizer csui-resize-cursor-icon" aria-label="resizer" role="seperator" aria-valuemin="432px" aria-valuemax="100%" tabindex="0" style="touch-action: none;"></div>
+                <div class="csui-side-panel-main">
+                    <iframe id="cc-iframe" src="${ccConfig.viewerUrl(that.model.attributes.id, that.model.attributes.name)}" width="100%" height="100%"></iframe>
+                </div>
             </div>
         </div>
     `;
 
     const iframe = document.querySelector("#cc-iframe");
     iframe.addEventListener("load", () => {
-        const interval = setInterval(() => {
-            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-            const logoText = iframeDoc.querySelector('.gd-header-logo-text');
-            const logoBrand = iframeDoc.querySelector('.gd-header-logo-brand');
-            const toolbar = iframeDoc.querySelector("div.gd-header");
-            const closeBtn = iframeDoc.querySelector("#cc-close-btn");
+        // console.log(document.querySelector('#cc-sidepanel'))
+        // document.querySelector("#cc-sidepanel-container").style.width = '50vw';
+        // console.log(document.querySelector('#cc-sidepanel'))
+        // const interval = setInterval(() => {
+        //     const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        //     const logoText = iframeDoc.querySelector('.gd-header-logo-text');
+        //     const logoBrand = iframeDoc.querySelector('.gd-header-logo-brand');
+        //     const toolbar = iframeDoc.querySelector("div.gd-header");
+        //     const closeBtn = iframeDoc.querySelector("#cc-close-btn");
 
-            if (logoText && logoBrand) {
-                clearInterval(interval);
-                logoText.src = `${ccConfig.basePath}/img/opentext-logo.png`;
-                logoBrand.src = `${ccConfig.basePath}/img/6463527.png`;
-                console.log("Logos updated inside iframe!");
-            }
+        //     if (logoText && logoBrand) {
+        //         clearInterval(interval);
+        //         logoText.src = `${ccConfig.basePath}/img/opentext-logo.png`;
+        //         logoBrand.src = `${ccConfig.basePath}/img/6463527.png`;
+        //         console.log("Logos updated inside iframe!");
+        //     }
 
-            if(toolbar && !closeBtn) {
-                toolbar.innerHTML = `<div _ngcontent-ng-c3276646777="" class="gd-header-col-start" style="margin-right:20px">
-                    <button title="Close" id="cc-close-btn" _ngcontent-ng-c1756903690="" gdbutton="" tooltipposition="bottom" _nghost-ng-c3062361797="" style="background:none" pc10=""><span _ngcontent-ng-c1756903690="" class="material-symbols-outlined ng-star-inserted" style="font-size:18px">close</span></button>    
-                </div>`;
-                toolbar.style.height = "32px"
-                iframeDoc.querySelector("#cc-close-btn").addEventListener("click", () => {
-                    document.querySelector("#cc-sidepanel").remove();
-                });
-                iframeDoc.querySelector(".wrapper.ng-star-inserted .ng-star-inserted").style.top = "30px";
-                iframeDoc.querySelector(".wrapper.ng-star-inserted").style.marginTop = "90px";
-            }
-        }, 50);
+        //     if(toolbar && !closeBtn) {
+            //         toolbar.innerHTML = `<div _ngcontent-ng-c3276646777="" class="gd-header-col-start" style="margin-right:20px">
+        //             <button title="Close" id="cc-close-btn" _ngcontent-ng-c1756903690="" gdbutton="" tooltipposition="bottom" _nghost-ng-c3062361797="" style="background:none" pc10=""><span _ngcontent-ng-c1756903690="" class="material-symbols-outlined ng-star-inserted" style="font-size:18px">close</span></button>    
+        //         </div>`;
+        //         toolbar.style.height = "32px"
+        //         iframeDoc.querySelector("#cc-close-btn").addEventListener("click", () => {
+            //             document.querySelector("#cc-sidepanel").remove();
+        //         });
+        //         iframeDoc.querySelector(".wrapper.ng-star-inserted .ng-star-inserted").style.top = "30px";
+        //         iframeDoc.querySelector(".wrapper.ng-star-inserted").style.marginTop = "90px";
+        //     }
+        // }, 50);
     })
 }
 
@@ -102,6 +107,19 @@ window.addEventListener("message", function (event) {
         console.log("Got message from iframe: closeIframe");
         document.querySelector("#cc-sidepanel").remove();
     }
+    // if (event.data === "afterDocsRender") {
+    //     console.log("Got message from iframe: afterDocsRender");
+    //     document.querySelector("#cc-sidepanel-container").style.width = '50vw';
+    // }
+    if (event.data === "prepareDocsRender") {
+        console.log("Got message from iframe: prepareDocsRender");
+        document.querySelector("#cc-sidepanel-container").style.visibility = 'visible';
+        document.querySelector("#cc-sidepanel-container").style.width = '50vw';
+    }
+    // if (event.data === "beforeDocsRender") {
+    //     console.log("Got message from iframe: beforeDocsRender");
+    //     document.querySelector("#cc-sidepanel-container").style.width = '50vw';
+    // }
 });
 // CleverConversion Integration - END
 ```
