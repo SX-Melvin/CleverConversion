@@ -12,7 +12,7 @@ namespace CleverConversion.Common.Common.Entity.Web
         public string? Path { get; set; }
         
         [JsonProperty]
-        public string? Guid { get; set; }
+        public string Guid { get; set; }
 
         [JsonProperty]
         public string? Password { get; set; }

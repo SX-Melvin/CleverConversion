@@ -13,7 +13,8 @@ namespace CleverConversion.Common.Annotation.Annotator
         public TextFieldAnnotator(AnnotationDataEntity annotationData, PageInfo pageInfo)
             : base(annotationData, pageInfo)
         {
-            textFieldAnnotation = new TextFieldAnnotation {
+            textFieldAnnotation = new TextFieldAnnotation
+            {
                 Box = GetBox(),
                 FontFamily = !string.IsNullOrEmpty(annotationData.Font) ? annotationData.Font : "Arial",
                 FontColor = annotationData.FontColor,
@@ -21,7 +22,7 @@ namespace CleverConversion.Common.Annotation.Annotator
                 Text = annotationData.Text
             };
         }
-        
+
         public override AnnotationBase AnnotateWord()
         {
             textFieldAnnotation = InitAnnotationBase(textFieldAnnotation) as TextFieldAnnotation;

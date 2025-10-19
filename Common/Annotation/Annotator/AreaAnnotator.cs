@@ -22,7 +22,6 @@ namespace CleverConversion.Common.Annotation.Annotator
         public override AnnotationBase AnnotateWord()
         {
             areaAnnotation = InitAnnotationBase(areaAnnotation) as AreaAnnotation;
-            areaAnnotation.BackgroundColor = System.Drawing.Color.White.ToArgb();
             return areaAnnotation;
         }
 

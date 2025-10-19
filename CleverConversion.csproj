@@ -10,8 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+	<PackageReference Include="Antlr" Version="3.4.1.9004" />
+	<PackageReference Include="GroupDocs.Annotation" Version="22.11.0" />
+	<PackageReference Include="GroupDocs.Comparison" Version="25.9.0" />
 	<PackageReference Include="System.Text.Encodings.Web" Version="9.0.0" />
-    <PackageReference Include="GroupDocs.Total" Version="25.8.0" />
     <PackageReference Include="GroupDocs.Viewer.UI" Version="8.1.1" />
     <PackageReference Include="GroupDocs.Viewer.UI.Api.Local.Cache" Version="8.1.1" />
     <PackageReference Include="GroupDocs.Viewer.UI.Api.Local.Storage" Version="8.1.1" />

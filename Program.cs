@@ -5,6 +5,8 @@ using CleverConversion.Services;
 using CleverConversion.Services.REST;
 using NLog.Extensions.Logging;
 
+new GroupDocs.Annotation.License().SetLicense("C:\\Users\\user\\Documents\\Work\\Swiftx\\CleverConversion\\License\\GroupDocs.Totalfor.NET.lic");
+
 var config = new ConfigurationBuilder()
    .SetBasePath(Directory.GetCurrentDirectory())
    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -12,7 +14,7 @@ var config = new ConfigurationBuilder()
 
 NLog.LogManager.Configuration = new NLogLoggingConfiguration(config.GetSection("NLog"));
 
-GroupDocs.Total.License.SetLicense("./License/GroupDocs.Totalfor.NET.lic");
+//GroupDocs.Total.License.SetLicense("./License/GroupDocs.Totalfor.NET.lic");
 
 var builder = WebApplication.CreateBuilder(args);
 

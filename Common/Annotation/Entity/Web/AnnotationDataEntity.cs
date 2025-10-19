@@ -12,10 +12,10 @@ namespace CleverConversion.Common.Annotation.Entity.Web
         public int PageNumber {get; set;}
 
         [JsonProperty]
-        public int? FontColor { get; set; } = 0;
+        public int? FontColor { get; set; }
 
         [JsonProperty]
-        public float? FontSize { get; set; } = 0;
+        public float? FontSize { get; set; }
 
         [JsonProperty]
         public float Left {get; set;}

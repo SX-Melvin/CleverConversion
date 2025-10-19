@@ -147,50 +147,61 @@ namespace CleverConversion.Controllers
 
         public AnnotatedDocumentEntity LoadDocument(AnnotationPostedDataEntity loadDocumentRequest, bool loadAllPages)
         {
-            string password = loadDocumentRequest.Password;
             AnnotatedDocumentEntity description = new();
-            string documentGuid = loadDocumentRequest.Guid;
 
-            using (Annotator annotator = new(documentGuid, GetLoadOptions(password)))
+            try
             {
-                IDocumentInfo info = annotator.Document.GetDocumentInfo();
-                AnnotationBase[] annotations = annotator.Get().ToArray();
-                description.Guid = loadDocumentRequest.Guid;
-                string documentType = getDocumentType(info);
+                string password = loadDocumentRequest.Password;
+                string documentGuid = loadDocumentRequest.Guid;
 
-                description.SupportedAnnotations = new SupportedAnnotations().GetSupportedAnnotations(documentType);
-
-                List<string> pagesContent = [];
-
-                if (loadAllPages)
+                using (Annotator annotator = new(documentGuid, GetLoadOptions(password)))
                 {
-                    pagesContent = GetAllPagesContent(annotator, info);
-                }
+                    IDocumentInfo info = annotator.Document.GetDocumentInfo();
+                    AnnotationBase[] annotations = annotator.Get().ToArray();
+                    description.Guid = loadDocumentRequest.Guid;
+                    string documentType = getDocumentType(info);
 
-                for (int i = 0; i < info.PagesInfo.Count; i++)
-                {
-                    PageDataDescriptionEntity page = new()
-                    {
-                        Number = i + 1,
-                        Height = info.PagesInfo[i].Height,
-                        Width = info.PagesInfo[i].Width,
-                    };
+                    description.SupportedAnnotations = new SupportedAnnotations().GetSupportedAnnotations(documentType);
 
-                    if (annotations != null && annotations.Length > 0)
+                    List<string> pagesContent = [];
+
+                    if (loadAllPages)
                     {
-                        page.Annotations = AnnotationMapper.MapForPage(annotations, i + 1, info.PagesInfo[i], documentType);
+                        pagesContent = GetAllPagesContent(annotator, info);
                     }
 
-                    if (pagesContent.Count > 0)
+                    for (int i = 0; i < info.PagesInfo.Count; i++)
                     {
-                        page.Data = pagesContent[i];
+                        PageDataDescriptionEntity page = new()
+                        {
+                            Number = i + 1,
+                            Height = info.PagesInfo[i].Height,
+                            Width = info.PagesInfo[i].Width,
+                        };
+
+                        if (annotations != null && annotations.Length > 0)
+                        {
+                            page.Annotations = AnnotationMapper.MapForPage(annotations, i + 1, info.PagesInfo[i], documentType);
+                        }
+
+                        if (pagesContent.Count > 0)
+                        {
+                            page.Data = pagesContent[i];
+                        }
+                        description.Pages.Add(page);
                     }
-                    description.Pages.Add(page);
                 }
+
+                description.Guid = documentGuid;
+                // return document description
+                return description;
+            }
+            catch (Exception ex)
+            {
+
+                _logger.Error(ex);
             }
 
-            description.Guid = documentGuid;
-            // return document description
             return description;
         }
 
@@ -459,7 +470,6 @@ namespace CleverConversion.Controllers
 
                 // Add annotation to the document
                 RemoveAnnotations(documentGuid, password);
-
                 // check if annotations array contains at least one annotation to add
                 if (annotations.Count != 0)
                 {
@@ -468,6 +478,7 @@ namespace CleverConversion.Controllers
                     {
                         foreach (var annotation in annotations)
                         {
+                            _logger.Info(JsonConvert.SerializeObject(annotation));
                             annotator.Add(annotation);
                         }
 
@@ -475,7 +486,7 @@ namespace CleverConversion.Controllers
                     }
                     catch (Exception ex)
                     {
-                        _logger.Info(ex);
+                        _logger.Error(ex);
                     }
 
                     if (System.IO.File.Exists(documentGuid))
@@ -490,6 +501,7 @@ namespace CleverConversion.Controllers
                 {
                     Guid = documentGuid
                 };
+
                 if (annotateDocumentRequest.Print != null && annotateDocumentRequest.Print.Value)
                 {
                     annotatedDocument.Pages = GetAnnotatedPagesForPrint(password, documentGuid);
@@ -546,16 +558,19 @@ namespace CleverConversion.Controllers
                 using (Stream inputStream = System.IO.File.Open(documentGuid, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite))
                 {
                     using Annotator annotator = new (inputStream, GetLoadOptions(password));
+                    //if(annotationDatas != null)
+                    //{
+                    //    annotator.Remove(annotationDatas.Select(x => x.Id).ToList());
+                    //}
                     annotator.Save(tempPath, new SaveOptions { AnnotationTypes = AnnotationType.None });
                 }
 
                 System.IO.File.Delete(documentGuid);
-                //System.IO.File.Move(tempPath, documentGuid);
+                System.IO.File.Move(tempPath, documentGuid);
 
-                var fileName = Path.GetFileName(documentGuid);
-                var path = Path.Combine(_appConfig.Files.OriginalFilesPath, fileName);
-                _logger.Info(path);
-                System.IO.File.Copy(path, documentGuid, overwrite: true);
+                //var fileName = Path.GetFileName(documentGuid);
+                //var path = Path.Combine(_appConfig.Files.OriginalFilesPath, fileName);
+                //System.IO.File.Copy(path, documentGuid, overwrite: true);
             }
             catch (Exception ex)
             {

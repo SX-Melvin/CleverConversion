@@ -54,9 +54,9 @@ namespace CleverConversion.Common.Annotation.Annotator
             CommentsEntity[] comments = annotationData.Comments;
             if (comments != null && comments.Length > 0 && comments[0] != null)
             {
-                polylineAnnotation.User = new User 
-                { 
-                    Name = comments[0].UserName 
+                polylineAnnotation.User = new User
+                {
+                    Name = comments[0].UserName
                 };
             }
         }
