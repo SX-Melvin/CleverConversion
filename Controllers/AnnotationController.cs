@@ -129,8 +129,9 @@ namespace CleverConversion.Controllers
             AnnotatedDocumentEntity description = new();
             string documentGuid = loadDocumentRequest.Guid;
 
-            using (Annotator annotator = new(documentGuid, GetLoadOptions(password)))
+            try
             {
+                using Annotator annotator = new(documentGuid, GetLoadOptions(password));
                 IDocumentInfo info = annotator.Document.GetDocumentInfo();
                 AnnotationBase[] annotations = annotator.Get().ToArray();
                 description.Guid = loadDocumentRequest.Guid;
@@ -165,10 +166,16 @@ namespace CleverConversion.Controllers
                     }
                     description.Pages.Add(page);
                 }
+                
+
+                description.Guid = documentGuid;
+                return description;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
             }
 
-            description.Guid = documentGuid;
-            // return document description
             return description;
         }
 
@@ -446,6 +453,7 @@ namespace CleverConversion.Controllers
                     {
                         foreach (var annotation in annotations)
                         {
+                            _logger.Info(JsonConvert.SerializeObject(annotation));
                             annotator.Add(annotation);
                         }
 
@@ -453,7 +461,7 @@ namespace CleverConversion.Controllers
                     }
                     catch (Exception ex)
                     {
-                        _logger.Info(ex);
+                        _logger.Error(ex);
                     }
 
                     if (System.IO.File.Exists(documentGuid))
@@ -528,12 +536,12 @@ namespace CleverConversion.Controllers
                 }
 
                 System.IO.File.Delete(documentGuid);
-                //System.IO.File.Move(tempPath, documentGuid);
+                System.IO.File.Move(tempPath, documentGuid);
 
-                var fileName = Path.GetFileName(documentGuid);
-                var path = Path.Combine(_appConfig.Files.OriginalFilesPath, fileName);
-                _logger.Info(path);
-                System.IO.File.Copy(path, documentGuid, overwrite: true);
+                //var fileName = Path.GetFileName(documentGuid);
+                //var path = Path.Combine(_appConfig.Files.OriginalFilesPath, fileName);
+                //_logger.Info(path);
+                //System.IO.File.Copy(path, documentGuid, overwrite: true);
             }
             catch (Exception ex)
             {
@@ -549,11 +557,11 @@ namespace CleverConversion.Controllers
             return tempPath;
         }
 
-        private static LoadOptions GetLoadOptions(string password)
+        private static LoadOptions GetLoadOptions(string? password)
         {
             LoadOptions loadOptions = new()
             {
-                Password = password
+                Password = string.IsNullOrEmpty(password) ? null : password
             };
 
             return loadOptions;

@@ -15,7 +15,7 @@ namespace CleverConversion.Common.Common.Entity.Web
         public string? Guid { get; set; }
 
         [JsonProperty]
-        public string? Password { get; set; }
+        public string? Password { get; set; } = null;
 
         [JsonProperty]
         public string? Url { get; set; }
