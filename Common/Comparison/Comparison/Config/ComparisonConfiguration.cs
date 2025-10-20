@@ -12,13 +12,13 @@ namespace CleverConversion.Common.Comparison.Comparison.Config
     /// </summary>
     public class ComparisonConfiguration : CommonConfiguration
     {
-        [JsonProperty]
+        [JsonProperty("filesDirectory")]
         public string FilesDirectory { get; set; } = @"C:\Users\user\Documents\Work\Swiftx\CleverConversion\Files";
 
-        [JsonProperty]
+        [JsonProperty("resultDirectory")]
         public string ResultDirectory { get; set; } = @"C:\Users\user\Documents\Work\Swiftx\CleverConversion\Compared";
 
-        [JsonProperty]
+        [JsonProperty("preloadResultPageCount")]
         public int PreloadResultPageCount { get; set; }
     }
 }

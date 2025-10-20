@@ -13,61 +13,61 @@ namespace CleverConversion.Common.Annotation.Config
     /// </summary>
     public class AnnotationConfiguration : CommonConfiguration
     {
-        [JsonProperty]
+        [JsonProperty("filesDirectory")]
         public string FilesDirectory { get; set; } = @"C:\Users\user\Documents\Work\Swiftx\CleverConversion\Files";
 
-        [JsonProperty]
+        [JsonProperty("defaultDocument")]
         public string DefaultDocument { get; set; } = string.Empty;
 
-        [JsonProperty]
+        [JsonProperty("preloadPageCount")]
         public int PreloadPageCount { get; set; } = 0;
 
-        [JsonProperty]
+        [JsonProperty("textAnnotation")]
         public bool TextAnnotation { get; set; } = true;
 
-        [JsonProperty]
+        [JsonProperty("areaAnnotation")]
         public bool AreaAnnotation { get; set; } = true;
 
-        [JsonProperty]
+        [JsonProperty("pointAnnotation")]
         public bool PointAnnotation { get; set; } = true;
 
-        [JsonProperty]
+        [JsonProperty("textStrikeoutAnnotation")]
         public bool TextStrikeoutAnnotation { get; set; } = true;
 
-        [JsonProperty]
+        [JsonProperty("polylineAnnotation")]
         public bool PolylineAnnotation { get; set; } = true;
 
-        [JsonProperty]
+        [JsonProperty("textFieldAnnotation")]
         public bool TextFieldAnnotation { get; set; } = true;
 
-        [JsonProperty]
+        [JsonProperty("watermarkAnnotation")]
         public bool WatermarkAnnotation { get; set; } = true;
 
-        [JsonProperty]
+        [JsonProperty("textReplacementAnnotation")]
         public bool TextReplacementAnnotation { get; set; } = true;
 
-        [JsonProperty]
+        [JsonProperty("arrowAnnotation")]
         public bool ArrowAnnotation { get; set; } = true;
 
-        [JsonProperty]
+        [JsonProperty("textRedactionAnnotation")]
         public bool TextRedactionAnnotation { get; set; } = true;
 
-        [JsonProperty]
+        [JsonProperty("resourcesRedactionAnnotation")]
         public bool ResourcesRedactionAnnotation { get; set; } = false;
 
-        [JsonProperty]
+        [JsonProperty("textUnderlineAnnotation")]
         public bool TextUnderlineAnnotation { get; set; } = true;
 
-        [JsonProperty]
+        [JsonProperty("distanceAnnotation")]
         public bool DistanceAnnotation { get; set; } = true;
 
-        [JsonProperty]
+        [JsonProperty("downloadOriginal")]
         public bool DownloadOriginal { get; set; } = true;
 
-        [JsonProperty]
+        [JsonProperty("downloadAnnotated")]
         public bool DownloadAnnotated { get; set; } = true;
 
-        [JsonProperty]
+        [JsonProperty("zoom")]
         public bool Zoom { get; set; } = true;
     }
 }

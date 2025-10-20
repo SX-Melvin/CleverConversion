@@ -4,10 +4,10 @@ namespace CleverConversion.Common.Common.Entity.Web
 {
     public class LoadDocumentEntity
     {
-        [JsonProperty]
+        [JsonProperty("guid")]
         public string Guid { get; set; }
 
-        [JsonProperty]
+        [JsonProperty("pages")]
         public List<PageDescriptionEntity> Pages { get; set; } = [];
     }
 }

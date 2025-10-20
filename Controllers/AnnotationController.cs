@@ -148,12 +148,14 @@ namespace CleverConversion.Controllers
         public AnnotatedDocumentEntity LoadDocument(AnnotationPostedDataEntity loadDocumentRequest, bool loadAllPages)
         {
             AnnotatedDocumentEntity description = new();
+            string password = loadDocumentRequest.Password;
+            string documentGuid = loadDocumentRequest.Guid;
+
+            _logger.Info(JsonConvert.SerializeObject(GetLoadOptions(password)));
+            _logger.Info(documentGuid);
 
             try
             {
-                string password = loadDocumentRequest.Password;
-                string documentGuid = loadDocumentRequest.Guid;
-
                 using (Annotator annotator = new(documentGuid, GetLoadOptions(password)))
                 {
                     IDocumentInfo info = annotator.Document.GetDocumentInfo();
@@ -251,6 +253,7 @@ namespace CleverConversion.Controllers
                 }
 
                 // return loaded page object
+                _logger.Info(JsonConvert.SerializeObject(loadedPage.Annotations));
                 return loadedPage;
             }
             catch (Exception ex)
@@ -276,9 +279,9 @@ namespace CleverConversion.Controllers
             return documentType;
         }
 
-        private static List<string> GetAllPagesContent(GroupDocs.Annotation.Annotator annotator, IDocumentInfo pages)
+        private static List<string> GetAllPagesContent(Annotator annotator, IDocumentInfo pages)
         {
-            List<string> allPages = new List<string>();
+            List<string> allPages = [];
 
             //get page HTML
             for (int i = 0; i < pages.PagesInfo.Count; i++)
@@ -296,9 +299,9 @@ namespace CleverConversion.Controllers
             return allPages;
         }
 
-        static MemoryStream RenderPageToMemoryStream(GroupDocs.Annotation.Annotator annotator, int pageNumberToRender)
+        static MemoryStream RenderPageToMemoryStream(Annotator annotator, int pageNumberToRender)
         {
-            MemoryStream result = new MemoryStream();
+            MemoryStream result = new();
 
             PreviewOptions previewOptions = new PreviewOptions(pageNumber => result)
             {
@@ -590,7 +593,7 @@ namespace CleverConversion.Controllers
         {
             LoadOptions loadOptions = new()
             {
-                Password = password
+                Password = string.IsNullOrEmpty(password) ? null : password
             };
 
             return loadOptions;

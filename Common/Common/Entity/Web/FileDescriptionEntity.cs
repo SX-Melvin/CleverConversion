@@ -7,19 +7,19 @@ namespace CleverConversion.Common.Common.Entity.Web
     /// </summary>
     public class FileDescriptionEntity
     {
-        [JsonProperty]
+        [JsonProperty("guid")]
         public string Guid { get; set; }
 
-        [JsonProperty]
+        [JsonProperty("name")]
         public string Name { get; set; }
-        
-        [JsonProperty]
+
+        [JsonProperty("docType")]
         public string DocType { get; set; }
-        
-        [JsonProperty]
+
+        [JsonProperty("isDirectory")]
         public bool IsDirectory { get; set; }
-        
-        [JsonProperty]
+
+        [JsonProperty("size")]
         public long Size { get; set; }
     }
 }

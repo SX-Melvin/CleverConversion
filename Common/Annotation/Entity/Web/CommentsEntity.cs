@@ -5,13 +5,13 @@ namespace CleverConversion.Common.Annotation.Entity.Web
 {
     public class CommentsEntity
     {
-        [JsonProperty]
+        [JsonProperty("time")]
         public string Time { get; set; }
         
-        [JsonProperty]
+        [JsonProperty("text")]
         public string Text { get; set; }
         
-        [JsonProperty]
+        [JsonProperty("username")]
         public string UserName { get; set; }
     }
 }

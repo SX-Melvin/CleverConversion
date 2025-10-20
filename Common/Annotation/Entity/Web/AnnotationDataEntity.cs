@@ -5,49 +5,50 @@ namespace CleverConversion.Common.Annotation.Entity.Web
 {
     public class AnnotationDataEntity
     {
-        [JsonProperty]
-        public int Id {get; set;}
-        
-        [JsonProperty]
-        public int PageNumber {get; set;}
+        [JsonProperty("id")]
+        public int Id { get; set; }
 
-        [JsonProperty]
+        [JsonProperty("pageNumber")]
+        public int PageNumber { get; set; }
+
+        [JsonProperty("fontColor")]
         public int? FontColor { get; set; }
 
-        [JsonProperty]
+        [JsonProperty("fontSize")]
         public float? FontSize { get; set; }
 
-        [JsonProperty]
-        public float Left {get; set;}
+        [JsonProperty("left")]
+        public float Left { get; set; }
 
-        [JsonProperty]
-        public float Top {get; set;}
+        [JsonProperty("top")]
+        public float Top { get; set; }
 
-        [JsonProperty]
-        public float Width { get; set;}
+        [JsonProperty("width")]
+        public float Width { get; set; }
 
-        [JsonProperty]
-        public float Height {get; set;}
-        
-        [JsonProperty]
-        public string? SvgPath {get; set;}
-        
-        [JsonProperty]
-        public string? Type {get; set;}
-        
-        [JsonProperty]
-        public string? DocumentType {get; set;}
-        
-        [JsonProperty]
-        public string? Text {get; set;}
-        
-        [JsonProperty]
-        public string? Font {get; set;}
+        [JsonProperty("height")]
+        public float Height { get; set; }
 
-        [JsonProperty]
+        [JsonProperty("svgPath")]
+        public string? SvgPath { get; set; }
+
+        [JsonProperty("type")]
+        public string? Type { get; set; }
+
+        [JsonProperty("documentType")]
+        public string? DocumentType { get; set; }
+
+        [JsonProperty("text")]
+        public string? Text { get; set; }
+
+        [JsonProperty("font")]
+        public string? Font { get; set; }
+
+        [JsonProperty("imported")]
         public bool? Imported { get; set; }
 
-        [JsonProperty]
+        [JsonProperty("comments")]
         public CommentsEntity[]? Comments { get; set; } = [];
+
     }
 }

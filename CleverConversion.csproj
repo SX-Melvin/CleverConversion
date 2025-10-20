@@ -10,21 +10,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-	<PackageReference Include="Antlr" Version="3.4.1.9004" />
-	<PackageReference Include="GroupDocs.Annotation" Version="22.11.0" />
-	<PackageReference Include="GroupDocs.Comparison" Version="25.9.0" />
+	<PackageReference Include="GroupDocs.Annotation" Version="24.12.0" />
+	<PackageReference Include="GroupDocs.Comparison" Version="25.1.0" />
+	<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 	<PackageReference Include="System.Text.Encodings.Web" Version="9.0.0" />
     <PackageReference Include="GroupDocs.Viewer.UI" Version="8.1.1" />
     <PackageReference Include="GroupDocs.Viewer.UI.Api.Local.Cache" Version="8.1.1" />
     <PackageReference Include="GroupDocs.Viewer.UI.Api.Local.Storage" Version="8.1.1" />
     <PackageReference Include="GroupDocs.Viewer.UI.SelfHost.Api" Version="8.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="NLog" Version="6.0.4" />
     <PackageReference Include="NLog.Extensions.Logging" Version="6.0.4" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="6.0.4" />
     <PackageReference Include="RestSharp" Version="112.1.0" />
-    <PackageReference Include="YamlDotNet.NetCore" Version="1.0.0" />
+    <PackageReference Include="YamlDotNet" Version="16.3.0" />
   </ItemGroup>
 
   <ItemGroup>

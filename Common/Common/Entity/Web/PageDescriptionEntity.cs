@@ -7,20 +7,19 @@ namespace CleverConversion.Common.Common.Entity.Web
     /// </summary>
     public class PageDescriptionEntity
     {
-        [JsonProperty]
+        [JsonProperty("width")]
         public double Width { get; set; }
 
-        [JsonProperty]
+        [JsonProperty("number")]
         public int Number { get; set; }
 
-        [JsonProperty]
+        [JsonProperty("height")]
         public double Height { get; set; }
 
-        [JsonProperty]
+        [JsonProperty("angle")]
         public int Angle { get; set; }
 
-        [JsonProperty]
+        [JsonProperty("data")]
         public string Data { get; set; }
-
     }
 }

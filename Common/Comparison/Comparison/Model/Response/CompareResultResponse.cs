@@ -8,27 +8,28 @@ namespace CleverConversion.Common.Comparison.Comparison.Model.Response
     public class CompareResultResponse
     {
         /// <summary>
-        /// List of changies
+        /// List of changes
         /// </summary>
-        [JsonProperty]
+        [JsonProperty("changes")]
         public ChangeInfo[] Changes { get; set; }
 
         /// <summary>
         /// List of images of pages with marked changes
         /// </summary>
-        [JsonProperty]
+        [JsonProperty("pages")]
         public List<PageDescriptionEntity> Pages { get; set; }
 
         /// <summary>
         /// Unique key of results
         /// </summary>
-        [JsonProperty]
+        [JsonProperty("guid")]
         public string Guid { get; set; }
 
         /// <summary>
         /// Extension of compared files, for saving Comparison results
         /// </summary>
-        [JsonProperty]
+        [JsonProperty("extension")]
         public string Extension { get; set; }
+
     }
 }

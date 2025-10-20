@@ -5,13 +5,13 @@ namespace CleverConversion.Common.Annotation.Entity.Web
 {
     public class AnnotatedDocumentEntity : PageDescriptionEntity
     {
-        [JsonProperty]
+        [JsonProperty("guid")]
         public string Guid { get; set; }
         
-        [JsonProperty]
+        [JsonProperty("pages")]
         public List<PageDataDescriptionEntity> Pages { get; set; } = [];
         
-        [JsonProperty]
+        [JsonProperty("supportedAnnotations")]
         public string[] SupportedAnnotations { get; set; }
     }
 }

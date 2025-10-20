@@ -9,25 +9,26 @@ namespace CleverConversion.Common.Common.Config
     /// </summary>
     public class CommonConfiguration
     {
-        [JsonProperty]
+        [JsonProperty("pageSelector")]
         public bool PageSelector { get; set; } = true;
 
-        [JsonProperty]
+        [JsonProperty("download")]
         public bool Download { get; set; } = true;
 
-        [JsonProperty]
+        [JsonProperty("upload")]
         public bool Upload { get; set; } = true;
 
-        [JsonProperty]
+        [JsonProperty("print")]
         public bool Print { get; set; } = true;
 
-        [JsonProperty]
+        [JsonProperty("browse")]
         public bool Browse { get; set; } = true;
 
-        [JsonProperty]
+        [JsonProperty("rewrite")]
         public bool Rewrite { get; set; } = true;
 
-        [JsonProperty]
+        [JsonProperty("enableRightClick")]
         public bool EnableRightClick { get; set; } = true;
+
     }
 }

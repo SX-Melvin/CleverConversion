@@ -6,7 +6,7 @@ namespace CleverConversion.Common.Annotation.Entity.Web
     public class PageDataDescriptionEntity : PageDescriptionEntity
     {
         /// List of annotation data  
-        [JsonProperty]
+        [JsonProperty("annotations")]
         public AnnotationDataEntity[] Annotations { get; set; } = [];
     }
 }

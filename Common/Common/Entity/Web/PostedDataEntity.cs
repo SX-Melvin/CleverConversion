@@ -8,28 +8,28 @@ namespace CleverConversion.Common.Common.Entity.Web
     /// </summary>
     public class PostedDataEntity
     {
-        [JsonProperty]
+        [JsonProperty("path")]
         public string? Path { get; set; }
-        
-        [JsonProperty]
+
+        [JsonProperty("guid")]
         public string Guid { get; set; }
 
-        [JsonProperty]
+        [JsonProperty("password")]
         public string? Password { get; set; }
 
-        [JsonProperty]
+        [JsonProperty("url")]
         public string? Url { get; set; }
-        
-        [JsonProperty]
+
+        [JsonProperty("page")]
         public int Page { get; set; } = 1;
 
-        [JsonProperty]
+        [JsonProperty("angle")]
         public int? Angle { get; set; }
 
-        [JsonProperty]
+        [JsonProperty("pages")]
         public List<int> Pages { get; set; } = [];
 
-        [JsonProperty]
+        [JsonProperty("rewrite")]
         public bool? Rewrite { get; set; }
     }
 }

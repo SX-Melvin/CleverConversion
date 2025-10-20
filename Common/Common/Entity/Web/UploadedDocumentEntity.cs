@@ -7,7 +7,7 @@ namespace CleverConversion.Common.Common.Entity.Web
     /// </summary>
     public class UploadedDocumentEntity
     {
-        [JsonProperty]
+        [JsonProperty("guid")]
         public string Guid { get; set; }
     }
 }

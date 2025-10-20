@@ -5,10 +5,10 @@ namespace CleverConversion.Common.Comparison.Comparison.Model.Request
 {
     public class CompareFileDataRequest
     {
-        [JsonProperty]
+        [JsonProperty("guid")]
         public string Guid { get; set; }
 
-        [JsonProperty]
+        [JsonProperty("password")]
         public string? Password { get; set; } = null;
     }
 }
