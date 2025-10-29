@@ -20,3 +20,25 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.loader {
+    margin: auto;
+    position: relative;
+    border: 12px solid #d6d5e8;
+    border-left: 12px solid #2e3d98;
+    transform: translateZ(0);
+    animation: load 1s infinite linear;
+    border-radius: 100%;
+    width: 72px;
+    height: 72px;
+}
+
+@keyframes load {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

@@ -4,13 +4,19 @@
     ViewData["Title"] = "Loading...";
 }
 
+<style>
+    .loader-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+</style>
+
 <div>
-    <center class="my-5">
-        <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZTlkdm03cXBheXRjejBubXRuOWJ2cDZmcGUxMnhkNDFpdnQzdmpqZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/sIIhZliB2McAo/giphy.gif" alt="Opening File..." />
-        <div class="mt-2 fw-bold">
-            Loading...
-        </div>
-    </center>
+    <div class="loader-container">
+        <div class="loader"></div>
+    </div>
 </div>
 
 <script>
