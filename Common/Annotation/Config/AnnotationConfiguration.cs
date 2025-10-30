@@ -14,7 +14,7 @@ namespace CleverConversion.Common.Annotation.Config
     public class AnnotationConfiguration : CommonConfiguration
     {
         [JsonProperty]
-        public string FilesDirectory { get; set; } = @"C:\Users\user\Documents\Work\Swiftx\CleverConversion\Files";
+        public string FilesDirectory { get; set; } = @".\Files";
 
         [JsonProperty]
         public string DefaultDocument { get; set; } = string.Empty;

@@ -26,7 +26,7 @@ namespace CleverConversion.Services
 
                 if(AppConfig.Annotation.AllowedExts.Any(x => x == Path.GetExtension(fileName)))
                 {
-                    result.Data.RedirectLink = $"{AppConfig.BasePath}/annotate?guid={result.Data.AbsolutePath}";
+                    result.Data.RedirectLink = $"{AppConfig.BasePath}/annotate?guid={result.Data.AbsolutePath}&nodeId={nodeID}";
                 }
             }
             catch (Exception ex)

@@ -136,6 +136,9 @@ MIT
 @groupdocs.examples.angular/comparison
 MIT
 
+@groupdocs.examples.angular/viewer
+MIT
+
 @ngx-translate/core
 MIT
 

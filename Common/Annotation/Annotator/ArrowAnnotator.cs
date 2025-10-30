@@ -69,7 +69,6 @@ namespace CleverConversion.Common.Annotation.Annotator
         {
             return AnnotationType.Arrow;
         }
-
         protected override Rectangle GetBox()
         {
             string svgPath = annotationData.SvgPath;
